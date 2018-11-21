@@ -1,0 +1,23 @@
+﻿<Window x:Class="desktopDate.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:desktopDate"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="74" Width="80" WindowStyle="None" Background="Transparent" ShowInTaskbar="False" AllowsTransparency="True" MouseDoubleClick="Window_MouseDoubleClick" MouseDown="Window_MouseDown">
+	<Grid>
+		<Grid Background="#000" Opacity="0.4"/>
+		<Grid>
+			<Grid.RowDefinitions>
+				<RowDefinition Height="*"/>
+				<RowDefinition Height="*"/>
+				<RowDefinition Height="*"/>
+			</Grid.RowDefinitions>
+
+			<Label Grid.Row="0" Padding="0" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Foreground="#fff" Content="00:00" Name="lblTime"/>
+			<Label Grid.Row="1" Padding="0" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Foreground="#fff" Content="星期日" Name="lblWeek"/>
+			<Label Grid.Row="2" Padding="0" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Foreground="#fff" Content="2018/01/01" Name="lblDate"/>
+		</Grid>
+	</Grid>
+</Window>
