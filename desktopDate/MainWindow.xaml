@@ -5,19 +5,37 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:desktopDate"
         mc:Ignorable="d"
-        Title="MainWindow" Height="74" Width="80" WindowStyle="None" Background="Transparent" ShowInTaskbar="False" AllowsTransparency="True" MouseDoubleClick="Window_MouseDoubleClick" MouseDown="Window_MouseDown">
+        Title="desktopDate" Height="74" Width="160" WindowStyle="None" Background="Transparent" ShowInTaskbar="False" AllowsTransparency="True" Loaded="Window_Loaded" MouseDown="Window_MouseDown">
 	<Grid>
-		<Grid Background="#000" Opacity="0.4"/>
+		<Grid Background="#000" Opacity="0.5"/>
 		<Grid>
-			<Grid.RowDefinitions>
-				<RowDefinition Height="*"/>
-				<RowDefinition Height="*"/>
-				<RowDefinition Height="*"/>
-			</Grid.RowDefinitions>
+			<Grid.ColumnDefinitions>
+				<ColumnDefinition Width="*"/>
+				<ColumnDefinition Width="*"/>
+			</Grid.ColumnDefinitions>
+			
+			<Grid Grid.Column="0">
+				<Grid.RowDefinitions>
+					<RowDefinition Height="*"/>
+					<RowDefinition Height="*"/>
+					<RowDefinition Height="*"/>
+				</Grid.RowDefinitions>
+				<Label Grid.Row="1" Padding="0" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Foreground="#fff" Content="圣诞节" Name="lblFestival"/>
+				<Label Grid.Row="2" Padding="0" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Foreground="#fff" Content="润十二月初三" Name="lblChineseDate"/>
+			</Grid>
+			<Grid Grid.Column="1">
+				<Grid.RowDefinitions>
+					<RowDefinition Height="*"/>
+					<RowDefinition Height="*"/>
+					<RowDefinition Height="*"/>
+				</Grid.RowDefinitions>
 
-			<Label Grid.Row="0" Padding="0" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Foreground="#fff" Content="00:00" Name="lblTime"/>
-			<Label Grid.Row="1" Padding="0" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Foreground="#fff" Content="星期日" Name="lblWeek"/>
-			<Label Grid.Row="2" Padding="0" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Foreground="#fff" Content="2018/01/01" Name="lblDate"/>
+				<Label Grid.Row="0" Padding="0" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Foreground="#fff" Content="00:00" Name="lblTime"/>
+				<Label Grid.Row="1" Padding="0" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Foreground="#fff" Content="星期日" Name="lblWeek"/>
+				<Label Grid.Row="2" Padding="0" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Foreground="#fff" Content="2018/01/01" Name="lblDate"/>
+				<!--<Label Grid.Row="1" Padding="0" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Foreground="#fff" Content="春节" Visibility="Collapsed" Name="lblFestival"/>-->
+				<!--<Label Grid.Row="2" Padding="0" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Foreground="#fff" Content="十二月初三" Visibility="Collapsed" Name="lblChineseDate"/>-->
+			</Grid>
 		</Grid>
 	</Grid>
 </Window>
