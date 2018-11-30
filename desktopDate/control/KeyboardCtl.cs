@@ -8,7 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
 
-namespace desktopDate {
+namespace desktopDate.control {
 	public class KeyboardCtl {
 		public bool isEnable = true;
 

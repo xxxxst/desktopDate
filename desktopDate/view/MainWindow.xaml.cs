@@ -1,4 +1,7 @@
-﻿using System;
+﻿using desktopDate.control;
+using desktopDate.services;
+using desktopDate.util;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
@@ -20,42 +23,12 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Windows.Threading;
 
-namespace desktopDate {
+namespace desktopDate.view {
 	/// <summary>
 	/// MainWindow.xaml 的交互逻辑
 	/// </summary>
 	public partial class MainWindow : Window {
-		//对外部软件窗口发送一些消息(如 窗口最大化、最小化等)
-		[DllImport("user32.dll", EntryPoint = "SendMessage", SetLastError = true, CharSet = CharSet.Auto)]
-		public static extern int SendMessage(IntPtr hwnd, int wMsg, IntPtr wParam, IntPtr lParam);
-		public delegate bool CallBack(IntPtr hwnd, IntPtr lParam);
-		[DllImport("user32.dll")]
-		public static extern int EnumWindows(CallBack enumProc, IntPtr lParam);
-		[DllImport("user32.dll")]
-		static extern int GetClassName(IntPtr hWnd, StringBuilder lpClassName, int nMaxCount);
-		[DllImport("user32.dll", CharSet = CharSet.Auto)]
-		public static extern IntPtr FindWindow([MarshalAs(UnmanagedType.LPTStr)] string lpClassName, [MarshalAs(UnmanagedType.LPTStr)] string lpWindowName);
-		[DllImport("user32.dll")]
-		public static extern IntPtr FindWindowEx(IntPtr hWnd1, IntPtr hWnd2, string lpsz1, string lpsz2);
-		[DllImport("user32.dll", SetLastError = true)]
-		public static extern IntPtr SetParent(IntPtr hWndChild, IntPtr hWndNewParent);
-		[DllImport("user32.dll")]
-		public static extern int GetWindowLong(IntPtr hwnd, int nIndex);
-		[DllImport("user32.dll")]
-		public static extern int SetWindowLong(IntPtr hwnd, int nIndex, int dwNewLong);
-		[DllImport("user32.dll")]
-		public static extern int SetLayeredWindowAttributes(IntPtr Handle, int crKey, byte bAlpha, int dwFlags);
-		const int GWL_EXSTYLE = -20;
-		const int WS_EX_TRANSPARENT = 0x20;
-		const int WS_EX_LAYERED = 0x80000;
-		const int LWA_ALPHA = 2;
-
-		[DllImport("dwmapi.dll")]
-		public static extern int DwmExtendFrameIntoClientArea(IntPtr hwnd, ref MARGINS margins);
-		[DllImport("dwmapi.dll", PreserveSig = false)]
-		public static extern bool DwmIsCompositionEnabled();
-		[DllImport("kernel32.dll")]
-		static extern uint GetLastError();
+		
 
 		static Dictionary<string, Key> mapKey = new Dictionary<string, Key>();
 		//public Dictionary<Key, string> mapCtlKey = new Dictionary<Key, string>();
@@ -65,13 +38,15 @@ namespace desktopDate {
 		ChineseLunisolarCalendar ChineseCalendar = new ChineseLunisolarCalendar();
 		bool isShowChineseDate = false;
 
-		Dictionary<string, string> mapFestival = new Dictionary<string, string>();
-		Dictionary<string, string> mapChineseFestival = new Dictionary<string, string>();
+		//Dictionary<string, string> mapFestival = new Dictionary<string, string>();
+		//Dictionary<string, string> mapChineseFestival = new Dictionary<string, string>();
+
+		DetailWin detailWin = null;
 
 		public MainWindow() {
 			InitializeComponent();
 
-			initFestival();
+			FestivalServer.ins.init();
 
 			//ignoreMouseEvent();
 			setPos();
@@ -120,55 +95,67 @@ namespace desktopDate {
 			//mapIgnoreKey[Key.Escape] = "";
 		}
 
-		CallBack myCallBack = null;
+		//bool isFindWindow = false;
+		ComUtil.CallBack enumWinCallBack = null;
 		private void appendToWindow() {
 			IntPtr Handle = new WindowInteropHelper(this).Handle;
 
-			myCallBack = new CallBack(enumWindowsProc);
-			EnumWindows(myCallBack, IntPtr.Zero);
+			//隐藏边框
+			long oldstyle = ComUtil.GetWindowLong(Handle, ComUtil.GWL_STYLE);
+			ComUtil.SetWindowLong(Handle, ComUtil.GWL_STYLE, oldstyle & (~(ComUtil.WS_CAPTION | ComUtil.WS_CAPTION_2)) | ComUtil.WS_EX_LAYERED);
+
+			//不在Alt+Tab中显示
+			long oldExStyle = ComUtil.GetWindowLong(Handle, ComUtil.GWL_EXSTYLE);
+			ComUtil.SetWindowLong(Handle, ComUtil.GWL_EXSTYLE, oldExStyle & (~ComUtil.WS_EX_APPWINDOW) | ComUtil.WS_EX_TOOLWINDOW);
+
+			//SetLayeredWindowAttributes(Handle, 0, 128, LWA_COLORKEY );
 
 			//IntPtr pWnd = FindWindow("Progman", null);
-			//IntPtr pWnd = FindWindow("WorkerW", null);
-			//if (pWnd == IntPtr.Zero) return;
-			//Debug.WriteLine("aaa");
+			//if(pWnd != IntPtr.Zero) {
+			//	IntPtr pWnd2 = FindWindowEx(pWnd, IntPtr.Zero, "SHELLDLL_DefView", null);
+			//	if(pWnd2 != IntPtr.Zero) {
+			//		//SendMessage(pWnd, 0x052c, IntPtr.Zero, IntPtr.Zero);
+			//	} else {
+			//		SendMessage(pWnd, 0x052c, (IntPtr)1, IntPtr.Zero);
+			//	}
+			//}
 
-			//pWnd = FindWindowEx(pWnd, IntPtr.Zero, "SHELLDLL_DefView", null);
-			//if (pWnd == IntPtr.Zero) return;
-			//Debug.WriteLine("bbb");
-
-			//pWnd = FindWindowEx(pWnd, IntPtr.Zero, "SysListView32", null);
-			//if (pWnd == IntPtr.Zero) return;
-			//Debug.WriteLine("ccc");
-
-			//SetParent(Handle, pWnd);
+			enumWinCallBack = new ComUtil.CallBack(enumWindowsProc);
+			ComUtil.EnumWindows(enumWinCallBack, IntPtr.Zero);
 		}
 
+		//private int count = 0;
 		public bool enumWindowsProc(IntPtr hwnd, IntPtr lParam) {
 			int size = 255;
 			StringBuilder lpClassName = new StringBuilder(size);
-			GetClassName(hwnd, lpClassName, lpClassName.Capacity);
+			ComUtil.GetClassName(hwnd, lpClassName, lpClassName.Capacity);
 
 			string text = lpClassName.ToString();
 
-			if (!text.Contains("WorkerW")) {
+			if(!text.Contains("WorkerW")) {
 				return true;
 			}
 
-			IntPtr pWnd = FindWindowEx(hwnd, IntPtr.Zero, "SHELLDLL_DefView", null);
-			if (pWnd == IntPtr.Zero) return true;
-			//Debug.WriteLine("bbb");
+			//if (!text.Contains("WorkerW") && !text.Contains("Progman")) {
+			//	return true;
+			//}
+			//++count;
+			//if(count < 12) {
+			//	Debug.WriteLine("aa:" + count);
+			//	return true;
+			//}
 
-			pWnd = FindWindowEx(pWnd, IntPtr.Zero, "SysListView32", null);
-			if (pWnd == IntPtr.Zero) return true;
-			//Debug.WriteLine("ccc");
+			IntPtr pWnd = hwnd;
 
-			//Debug.WriteLine(text + "," + Convert.ToString((int)hwnd.ToInt32(), 16));
+			pWnd = ComUtil.FindWindowEx(hwnd, IntPtr.Zero, "SHELLDLL_DefView", null);
+			if(pWnd == IntPtr.Zero) return true;
 
+			pWnd = ComUtil.FindWindowEx(pWnd, IntPtr.Zero, "SysListView32", null);
+			if(pWnd == IntPtr.Zero) return true;
+
+			//isFindWindow = true;
 			IntPtr Handle = new WindowInteropHelper(GetWindow(this)).Handle;
-			//Debug.WriteLine(text + "," + Convert.ToString(Handle.ToInt32(), 16) + "," + Convert.ToString(hwnd.ToInt32(), 16));
-			//Debug.WriteLine("ddd:" + GetLastError());
-			SetParent(Handle, pWnd);
-			//Debug.WriteLine("ddd:" + GetLastError());
+			ComUtil.SetParent(Handle, pWnd);
 
 			return false;
 		}
@@ -183,41 +170,41 @@ namespace desktopDate {
 			//	}
 			//}
 
-			if (DwmIsCompositionEnabled()) {
-				MARGINS margin = new MARGINS();
+			if (ComUtil.DwmIsCompositionEnabled()) {
+				ComUtil.MARGINS margin = new ComUtil.MARGINS();
 				margin.Right = margin.Left = margin.Bottom = margin.Top = -1;
-				DwmExtendFrameIntoClientArea(Handle, ref margin);
+				ComUtil.DwmExtendFrameIntoClientArea(Handle, ref margin);
 			}
 
 			//SetWindowLong(Handle, GWL_EXSTYLE, GetWindowLong(Handle, GWL_EXSTYLE) | WS_EX_TRANSPARENT | WS_EX_LAYERED);
 			//SetLayeredWindowAttributes(Handle, 0, 128, LWA_ALPHA);
 		}
 
-		private void initFestival() {
-			mapFestival["1/1"] = "元旦";
-			mapFestival["2/14"] = "情人节";
-			mapFestival["3/8"] = "妇女节";
-			mapFestival["3/12"] = "植树节";
-			mapFestival["4/1"] = "愚人节";
-			mapFestival["5/1"] = "劳动节";
-			mapFestival["6/1"] = "儿童节";
-			mapFestival["8/1"] = "建军节";
-			mapFestival["8/12"] = "青年节";
-			mapFestival["9/10"] = "教师节";
-			mapFestival["10/1"] = "国庆节";
-			mapFestival["11/1"] = "万圣节";
-			mapFestival["11/26"] = "感恩节";
-			mapFestival["12/24"] = "平安夜";
-			mapFestival["12/25"] = "圣诞节";
+		//private void initFestival() {
+		//	mapFestival["01/01"] = "元旦";
+		//	mapFestival["02/14"] = "情人节";
+		//	mapFestival["03/08"] = "妇女节";
+		//	mapFestival["03/12"] = "植树节";
+		//	mapFestival["04/01"] = "愚人节";
+		//	mapFestival["05/01"] = "劳动节";
+		//	mapFestival["06/01"] = "儿童节";
+		//	mapFestival["08/01"] = "建军节";
+		//	mapFestival["08/12"] = "青年节";
+		//	mapFestival["09/10"] = "教师节";
+		//	mapFestival["10/01"] = "国庆节";
+		//	mapFestival["11/01"] = "万圣节";
+		//	mapFestival["11/26"] = "感恩节";
+		//	mapFestival["12/24"] = "平安夜";
+		//	mapFestival["12/25"] = "圣诞节";
 
-			mapChineseFestival["12/30"] = "除夕";
-			mapChineseFestival["1/1"] = "春节";
-			mapChineseFestival["1/15"] = "元宵节";
-			mapChineseFestival["5/5"] = "端午节";
-			mapChineseFestival["7/7"] = "七夕节";
-			mapChineseFestival["8/15"] = "中秋节";
-			mapChineseFestival["9/9"] = "重阳节";
-		}
+		//	mapChineseFestival["12/30"] = "除夕";
+		//	mapChineseFestival["01/01"] = "春节";
+		//	mapChineseFestival["01/15"] = "元宵节";
+		//	mapChineseFestival["05/05"] = "端午节";
+		//	mapChineseFestival["07/07"] = "七夕节";
+		//	mapChineseFestival["08/15"] = "中秋节";
+		//	mapChineseFestival["09/09"] = "重阳节";
+		//}
 
 		private void setPos() {
 			int w = 0;
@@ -241,28 +228,42 @@ namespace desktopDate {
 			lblDate.Content = date.ToString("yyyy/MM/dd");
 
 			//每天刷新一次
-			string temp = date.Month + "/" + date.Day;
+			string temp = date.ToString("MM/dd");
 			if (temp == lastDay) {
 				return;
 			}
 			lastDay = temp;
 
 			//节日
-			if (mapFestival.ContainsKey(lastDay)) {
-				lblFestival.Content = mapFestival[lastDay];
-			} else {
-				//lblFestival.Content = lblWeek.Content;
-				lblFestival.Content = "";
-			}
+			string festival = FestivalServer.ins.getFestival(date);
+			lblFestival.Content = festival;
+
+			//节日
+			//if (mapFestival.ContainsKey(lastDay)) {
+			//	lblFestival.Content = mapFestival[lastDay];
+			//} else {
+			//	//lblFestival.Content = lblWeek.Content;
+			//	lblFestival.Content = "";
+			//}
 			
 			//农历
 			lblChineseDate.Content = GetChineseDateTime(date, out int mounth, out int day);
-			
+
 			//农历节日
-			string lastDayChinese = mounth + "/" + day;
-			if (mapChineseFestival.ContainsKey(lastDayChinese)) {
-				lblFestival.Content = mapChineseFestival[lastDayChinese];
+			string chineseFestival = FestivalServer.ins.getChineseFestival(date.Year, mounth, day);
+			if(chineseFestival != "") {
+				lblFestival.Content = chineseFestival;
 			}
+
+			if((string)lblFestival.Content == "") {
+				FestivalModel md = FestivalServer.ins.getNextFestival();
+				lblFestival.Content = md.name + "(" + md.dayOfRange + "天)";
+			}
+
+			//string lastDayChinese = mounth.ToString().PadLeft(2, '0') + "/" + day.ToString().PadLeft(2, '0');
+			//if (FestivalServer.ins.mapChineseFestival.ContainsKey(lastDayChinese)) {
+			//	lblFestival.Content = FestivalServer.ins.mapChineseFestival[lastDayChinese];
+			//}
 		}
 
 		string[] months = { "正", "二", "三", "四", "五", "六", "七", "八", "九", "十", "十一", "十二" };
@@ -364,20 +365,30 @@ namespace desktopDate {
 					});
 				});
 			}
+
+			if(e.ChangedButton == MouseButton.Left) {
+				if(detailWin == null) {
+					detailWin = new DetailWin();
+
+					detailWin.onClose = () => {
+						detailWin = null;
+					};
+
+					detailWin.Left = Left + Width - detailWin.Width;
+					detailWin.Top = Top - detailWin.Height - 10;
+
+					detailWin.Show();
+				}
+			}
+		}
+
+		private void Window_MouseEnter(object sender, System.Windows.Input.MouseEventArgs e) {
+			grdMain.Opacity = 0.6;
+		}
+
+		private void Window_MouseLeave(object sender, System.Windows.Input.MouseEventArgs e) {
+			grdMain.Opacity = 0.5;
 		}
 	}
-
-	public struct WindowInfo {
-		public IntPtr hWnd;
-		public string szWindowName;
-		public string szClassName;
-	}
-
-	[StructLayout(LayoutKind.Sequential)]
-	public struct MARGINS {
-		public int Left;
-		public int Right;
-		public int Top;
-		public int Bottom;
-	}
+	
 }

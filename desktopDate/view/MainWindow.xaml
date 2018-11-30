@@ -1,17 +1,17 @@
-﻿<Window x:Class="desktopDate.MainWindow"
+﻿<Window x:Class="desktopDate.view.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:desktopDate"
         mc:Ignorable="d"
-        Title="desktopDate" Height="74" Width="160" WindowStyle="None" Background="Transparent" ShowInTaskbar="False" AllowsTransparency="True" Loaded="Window_Loaded" MouseDown="Window_MouseDown">
+        Title="desktopDate" Height="74" Width="180" WindowStyle="None" Background="Transparent" ShowInTaskbar="False" AllowsTransparency="True" Loaded="Window_Loaded" MouseDown="Window_MouseDown" MouseEnter="Window_MouseEnter" MouseLeave="Window_MouseLeave">
 	<Grid>
-		<Grid Background="#000" Opacity="0.5"/>
+		<Grid Background="#000" Opacity="0.5" Name="grdMain"/>
 		<Grid>
 			<Grid.ColumnDefinitions>
 				<ColumnDefinition Width="*"/>
-				<ColumnDefinition Width="*"/>
+				<ColumnDefinition Width="80"/>
 			</Grid.ColumnDefinitions>
 			
 			<Grid Grid.Column="0">
