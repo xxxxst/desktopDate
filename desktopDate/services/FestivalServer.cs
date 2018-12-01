@@ -136,7 +136,8 @@ namespace desktopDate.services {
 			}
 
 			DateTime date = DateTime.Now;
-			foreach(string key in mapFestival.Keys) {
+			date = new DateTime(date.Year, date.Month, date.Day);
+			foreach (string key in mapFestival.Keys) {
 				lstFestival.Add(new FestivalModel(mapFestival[key], key, -1));
 			}
 			foreach(string key in mapChineseFestival.Keys) {
