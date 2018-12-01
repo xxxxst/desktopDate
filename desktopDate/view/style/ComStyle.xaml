@@ -26,6 +26,8 @@
 		</Setter>
 	</Style>
 
+	<Style TargetType="{x:Type ScrollViewer}" BasedOn="{StaticResource ComScrollViewStyle}"></Style>
+
 	<!--MiniButton-->
 	<Style BasedOn="{StaticResource BaseMiniButton}" TargetType="{x:Type supUI:MiniButton}">
 		<Setter Property="Foreground" Value="#fff"/>

@@ -28,8 +28,6 @@ namespace desktopDate.view {
 	/// MainWindow.xaml 的交互逻辑
 	/// </summary>
 	public partial class MainWindow : Window {
-		
-
 		static Dictionary<string, Key> mapKey = new Dictionary<string, Key>();
 		//public Dictionary<Key, string> mapCtlKey = new Dictionary<Key, string>();
 		//public Dictionary<Key, string> mapIgnoreKey = new Dictionary<Key, string>();
@@ -110,15 +108,15 @@ namespace desktopDate.view {
 
 			//SetLayeredWindowAttributes(Handle, 0, 128, LWA_COLORKEY );
 
-			//IntPtr pWnd = FindWindow("Progman", null);
-			//if(pWnd != IntPtr.Zero) {
-			//	IntPtr pWnd2 = FindWindowEx(pWnd, IntPtr.Zero, "SHELLDLL_DefView", null);
-			//	if(pWnd2 != IntPtr.Zero) {
-			//		//SendMessage(pWnd, 0x052c, IntPtr.Zero, IntPtr.Zero);
-			//	} else {
-			//		SendMessage(pWnd, 0x052c, (IntPtr)1, IntPtr.Zero);
-			//	}
-			//}
+			IntPtr pWnd = ComUtil.FindWindow("Progman", null);
+			if (pWnd != IntPtr.Zero) {
+				IntPtr pWnd2 = ComUtil.FindWindowEx(pWnd, IntPtr.Zero, "SHELLDLL_DefView", null);
+				if (pWnd2 != IntPtr.Zero) {
+					ComUtil.SendMessage(pWnd, 0x052c, IntPtr.Zero, IntPtr.Zero);
+				} else {
+					//SendMessage(pWnd, 0x052c, (IntPtr)1, IntPtr.Zero);
+				}
+			}
 
 			enumWinCallBack = new ComUtil.CallBack(enumWindowsProc);
 			ComUtil.EnumWindows(enumWinCallBack, IntPtr.Zero);

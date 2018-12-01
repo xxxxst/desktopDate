@@ -9,6 +9,7 @@
 				<ResourceDictionary Source="/sdk/csharpHelp/MiniButton/MiniButton.xaml" />
 
 				<ResourceDictionary Source="view/style/ListBoxItemWin7.xaml"/>
+				<ResourceDictionary Source="view/style/ComScrollViewStyle.xaml"/>
 				<ResourceDictionary Source="view/style/ComStyle.xaml"/>
 				<ResourceDictionary Source="view/style/Test.xaml"/>
 			</ResourceDictionary.MergedDictionaries>

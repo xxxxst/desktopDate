@@ -6,9 +6,9 @@
         xmlns:local="clr-namespace:desktopDate.view"
 		xmlns:supUI="clr-namespace:csharpHelp.ui"
         mc:Ignorable="d"
-        Title="DetailWin" Height="300" Width="250" WindowStyle="None" Background="#4d4d4d" ShowInTaskbar="False" Loaded="Window_Loaded" Deactivated="Window_Deactivated">
+        Title="DetailWin" Height="300" Width="250" WindowStyle="None" ResizeMode="NoResize" Background="#4d4d4d" ShowInTaskbar="False" Loaded="Window_Loaded" Deactivated="Window_Deactivated">
 	<Grid>
-		<Grid Margin="4">
+		<Grid Margin="8">
 			<Grid.RowDefinitions>
 				<RowDefinition Height="0"/>
 				<RowDefinition Height="4"/>
@@ -28,9 +28,9 @@
 			</Grid>
 
 			<Grid Grid.Row="2">
-				<ListBox Background="Transparent" BorderThickness="0" Name="lstFestival">
+				<ListBox Background="Transparent" BorderThickness="0" FocusVisualStyle="{x:Null}" ScrollViewer.HorizontalScrollBarVisibility="Disabled" Name="lstFestival">
 					<ListBox.ItemContainerStyle>
-						<Style TargetType="ListBoxItem">
+						<Style TargetType="ListBoxItem" BasedOn="{StaticResource ListBoxItemWin7}">
 							<Setter Property="HorizontalContentAlignment" Value="Stretch"/>
 							<Setter Property="Padding" Value="0"/>
 							<Style.Resources>

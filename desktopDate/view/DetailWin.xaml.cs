@@ -71,8 +71,8 @@ namespace desktopDate.view {
 			IntPtr Handle = new WindowInteropHelper(this).Handle;
 
 			//隐藏边框
-			//long oldstyle = ComUtil.GetWindowLong(Handle, ComUtil.GWL_STYLE);
-			//ComUtil.SetWindowLong(Handle, ComUtil.GWL_STYLE, oldstyle & (~(ComUtil.WS_CAPTION | ComUtil.WS_CAPTION_2)) | ComUtil.WS_EX_LAYERED);
+			long oldstyle = ComUtil.GetWindowLong(Handle, ComUtil.GWL_STYLE);
+			ComUtil.SetWindowLong(Handle, ComUtil.GWL_STYLE, oldstyle & (~(ComUtil.WS_CAPTION | ComUtil.WS_CAPTION_2)) | ComUtil.WS_EX_LAYERED);
 
 			//不在Alt+Tab中显示
 			long oldExStyle = ComUtil.GetWindowLong(Handle, ComUtil.GWL_EXSTYLE);
