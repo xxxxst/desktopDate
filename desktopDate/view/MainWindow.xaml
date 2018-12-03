@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:desktopDate"
         mc:Ignorable="d"
-        Title="desktopDate" Height="74" Width="180" WindowStyle="None" ResizeMode="NoResize" Background="Transparent" ShowInTaskbar="False" AllowsTransparency="True" Loaded="Window_Loaded" MouseDown="Window_MouseDown" MouseEnter="Window_MouseEnter" MouseLeave="Window_MouseLeave">
+        Title="desktopDate" Height="74" Width="180" WindowStyle="None" ResizeMode="NoResize" Background="Transparent" ShowInTaskbar="False" AllowsTransparency="True" Loaded="Window_Loaded" MouseDown="Window_MouseDown" MouseEnter="Window_MouseEnter" MouseLeave="Window_MouseLeave" Closed="Window_Closed">
 	<Grid>
 		<Grid Background="#000" Opacity="0.5" Name="grdMain"/>
 		<Grid>

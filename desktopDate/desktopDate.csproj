@@ -71,6 +71,12 @@
     <ErrorReport>prompt</ErrorReport>
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationManifest>app.manifest</ApplicationManifest>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationIcon>resource\image\icon.ico</ApplicationIcon>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="Microsoft.VisualBasic" />
     <Reference Include="PresentationFramework.Aero" />
@@ -98,7 +104,16 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="model\MainModel.cs" />
     <Compile Include="sdk\csharpHelp\MiniButton\MiniButton.cs" />
+    <Compile Include="sdk\csharpHelp\ui\IsDesignBind.cs" />
+    <Compile Include="sdk\csharpHelp\XmlCtl.cs" />
+    <Compile Include="sdk\csharpHelp\services\BridgeServer.cs" />
+    <Compile Include="services\TimerServer.cs" />
+    <Compile Include="sdk\csharpHelp\services\XmlModelServer.cs" />
+    <Compile Include="view\TimerBox.xaml.cs">
+      <DependentUpon>TimerBox.xaml</DependentUpon>
+    </Compile>
     <Page Include="sdk\csharpHelp\MiniButton\MiniButton.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -143,6 +158,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
+    <Page Include="view\TimerBox.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs">
@@ -162,6 +181,7 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+    <None Include="app.manifest" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
@@ -182,6 +202,22 @@
       <Install>false</Install>
     </BootstrapperPackage>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Resource Include="resource\image\start.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="resource\image\clock.png" />
+    <Resource Include="resource\image\icon.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="resource\image\icon.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="resource\image\timer.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="resource\image\pause.png" />
+    <Resource Include="resource\image\stop.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

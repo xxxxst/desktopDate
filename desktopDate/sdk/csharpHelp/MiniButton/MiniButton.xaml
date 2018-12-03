@@ -20,14 +20,19 @@
 						Background="{Binding Background,RelativeSource={RelativeSource TemplatedParent}}"
 						CornerRadius="{Binding Radius,RelativeSource={RelativeSource TemplatedParent}}"
 						Name="bd">
-						<Label
-							Content="{Binding Content, RelativeSource={RelativeSource TemplatedParent}}"
-							Height="{Binding Height,RelativeSource={RelativeSource TemplatedParent}}"
-							Foreground="{Binding Foreground,RelativeSource={RelativeSource TemplatedParent}}"
-							HorizontalAlignment="{Binding HorizontalAlignment,RelativeSource={RelativeSource TemplatedParent}}"
-							VerticalContentAlignment="{Binding VerticalContentAlignment,RelativeSource={RelativeSource TemplatedParent}}"
-							HorizontalContentAlignment="{Binding HorizontalContentAlignment,RelativeSource={RelativeSource TemplatedParent}}"
-							Padding="{Binding Padding,RelativeSource={RelativeSource TemplatedParent}}"/>
+						<Grid>
+							<Image
+								Source="{Binding Source, RelativeSource={RelativeSource TemplatedParent}}"
+								Margin="{Binding ImagePadding, RelativeSource={RelativeSource TemplatedParent}}"/>
+							<Label
+								Content="{Binding Content, RelativeSource={RelativeSource TemplatedParent}}"
+								Height="{Binding Height,RelativeSource={RelativeSource TemplatedParent}}"
+								Foreground="{Binding Foreground,RelativeSource={RelativeSource TemplatedParent}}"
+								HorizontalAlignment="{Binding HorizontalAlignment,RelativeSource={RelativeSource TemplatedParent}}"
+								VerticalContentAlignment="{Binding VerticalContentAlignment,RelativeSource={RelativeSource TemplatedParent}}"
+								HorizontalContentAlignment="{Binding HorizontalContentAlignment,RelativeSource={RelativeSource TemplatedParent}}"
+								Padding="{Binding Padding,RelativeSource={RelativeSource TemplatedParent}}"/>
+						</Grid>
 					</Border>
 					<ControlTemplate.Triggers>
 						<Trigger Property="IsMouseOver" Value="True">

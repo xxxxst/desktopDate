@@ -10,24 +10,30 @@
 	<Grid>
 		<Grid Margin="8">
 			<Grid.RowDefinitions>
-				<RowDefinition Height="0"/>
+				<RowDefinition Height="25"/>
 				<RowDefinition Height="4"/>
 				<RowDefinition Height="165*"/>
 			</Grid.RowDefinitions>
 
-			<Grid>
-				<Grid.ColumnDefinitions>
-					<ColumnDefinition Width="*"/>
-					<ColumnDefinition Width="1"/>
-					<ColumnDefinition Width="*"/>
-				</Grid.ColumnDefinitions>
+			<Border BorderThickness="1" BorderBrush="#b5b5b5" CornerRadius="8">
+				<Grid>
+					<Grid.ColumnDefinitions>
+						<ColumnDefinition Width="*"/>
+						<ColumnDefinition Width="1"/>
+						<ColumnDefinition Width="0"/>
+						<ColumnDefinition Width="0"/>
+						<ColumnDefinition Width="*"/>
+					</Grid.ColumnDefinitions>
 
-				<supUI:MiniButton Grid.Column="0" Padding="10,0" Background="#2a2a2a" Content="节日"/>
-				<Label Grid.Column="1" Padding="0" Background="#fff"/>
-				<supUI:MiniButton Grid.Column="2" Padding="10,0" Content="日历" Grid.ColumnSpan="2"/>
-			</Grid>
+					<supUI:MiniButton Grid.Column="0" Padding="10,0" Background="#2a2a2a" Radius="8,0,0,8" Content="节日" x:Name="btnFestival" Click="btnFestival_Click"/>
+					<Label Grid.Column="1" Padding="0" Background="#b5b5b5"/>
+					<supUI:MiniButton Grid.Column="2" Padding="10,0" Content="闹钟" x:Name="btnClock" Click="btnClock_Click"/>
+					<Label Grid.Column="3" Padding="0" Background="#b5b5b5"/>
+					<supUI:MiniButton Grid.Column="4" Padding="10,0" Radius="0,8,8,0" Content="计时" x:Name="btnTimer" Click="btnTimer_Click"/>
+				</Grid>
+			</Border>
 
-			<Grid Grid.Row="2">
+			<Grid Grid.Row="2" Name="grdFestival">
 				<ListBox Background="Transparent" BorderThickness="0" FocusVisualStyle="{x:Null}" ScrollViewer.HorizontalScrollBarVisibility="Disabled" Name="lstFestival">
 					<ListBox.ItemContainerStyle>
 						<Style TargetType="ListBoxItem" BasedOn="{StaticResource ListBoxItemWin7}">
@@ -59,6 +65,8 @@
 					</ListBox.ItemTemplate>
 				</ListBox>
 			</Grid>
+
+			<local:TimerBox Grid.Row="2" Visibility="Collapsed" x:Name="grdTimer"/>
 		</Grid>
 	</Grid>
 </Window>

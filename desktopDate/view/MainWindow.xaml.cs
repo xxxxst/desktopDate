@@ -1,4 +1,7 @@
-﻿using desktopDate.control;
+﻿using csharpHelp.services;
+using csharpHelp.util;
+using desktopDate.control;
+using desktopDate.model;
 using desktopDate.services;
 using desktopDate.util;
 using System;
@@ -39,12 +42,28 @@ namespace desktopDate.view {
 		//Dictionary<string, string> mapFestival = new Dictionary<string, string>();
 		//Dictionary<string, string> mapChineseFestival = new Dictionary<string, string>();
 
+		XmlCtl xmlCfg = null;
 		DetailWin detailWin = null;
+		XmlModelServer xmlCfgServer = null;
 
 		public MainWindow() {
 			InitializeComponent();
 
 			FestivalServer.ins.init();
+
+			xmlCfg = new XmlCtl();
+			xmlCfg.load("config.xml");
+			MainModel.ins.cfgMd = new ConfigModel();
+			xmlCfgServer = new XmlModelServer(MainModel.ins.cfgMd, xmlCfg);
+			try{
+				xmlCfgServer.loadFromXml();
+				ConfigModel md = MainModel.ins.cfgMd;
+				for(int i = 0; i < md.lstTimer.Count; ++i) {
+					Debug.WriteLine("11:" + md.lstTimer[i]);
+				}
+			} catch(Exception ex) {
+				Debug.WriteLine(ex.ToString());
+			}
 
 			//ignoreMouseEvent();
 			setPos();
@@ -106,7 +125,10 @@ namespace desktopDate.view {
 			long oldExStyle = ComUtil.GetWindowLong(Handle, ComUtil.GWL_EXSTYLE);
 			ComUtil.SetWindowLong(Handle, ComUtil.GWL_EXSTYLE, oldExStyle & (~ComUtil.WS_EX_APPWINDOW) | ComUtil.WS_EX_TOOLWINDOW);
 
-			//SetLayeredWindowAttributes(Handle, 0, 128, LWA_COLORKEY );
+			//win7
+			if(Environment.OSVersion.Version.Major <= 6.1) {
+				return;
+			}
 
 			IntPtr pWnd = ComUtil.FindWindow("Progman", null);
 			if (pWnd != IntPtr.Zero) {
@@ -386,6 +408,13 @@ namespace desktopDate.view {
 
 		private void Window_MouseLeave(object sender, System.Windows.Input.MouseEventArgs e) {
 			grdMain.Opacity = 0.5;
+		}
+
+		private void Window_Closed(object sender, EventArgs e) {
+			try {
+				xmlCfgServer.saveToXml();
+				xmlCfg.save();
+			} catch(Exception) { }
 		}
 	}
 	

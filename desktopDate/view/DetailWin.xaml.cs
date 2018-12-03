@@ -27,8 +27,12 @@ namespace desktopDate.view {
 		List<FestivalModel> arrFestival = new List<FestivalModel>();
 		List<FestivalVM> arrFestivalVM = new List<FestivalVM>();
 
+		Brush selectButtonBackground = null;
+
 		public DetailWin() {
 			InitializeComponent();
+
+			selectButtonBackground = btnFestival.Background;
 
 			arrFestival = FestivalServer.ins.getListFestival();
 			for(int i = 0; i < arrFestival.Count; ++i) {
@@ -84,6 +88,34 @@ namespace desktopDate.view {
 
 			Close();
 		}
+
+		private void btnFestival_Click(object sender, RoutedEventArgs e) {
+			btnFestival.Background = null;
+			btnClock.Background = null;
+			btnTimer.Background = null;
+
+			grdFestival.Visibility = Visibility.Collapsed;
+			grdTimer.Visibility = Visibility.Collapsed;
+
+			btnFestival.Background = selectButtonBackground;
+			grdFestival.Visibility = Visibility.Visible;
+		}
+
+		private void btnClock_Click(object sender, RoutedEventArgs e) {
+
+		}
+
+		private void btnTimer_Click(object sender, RoutedEventArgs e) {
+			btnFestival.Background = null;
+			btnClock.Background = null;
+			btnTimer.Background = null;
+
+			grdFestival.Visibility = Visibility.Collapsed;
+			grdTimer.Visibility = Visibility.Collapsed;
+
+			btnTimer.Background = selectButtonBackground;
+			grdTimer.Visibility = Visibility.Visible;
+		}
 	}
 
 	public class FestivalVM : INotifyPropertyChanged {
@@ -134,4 +166,5 @@ namespace desktopDate.view {
 	public enum DayOfRangeType {
 		Finish, Now, Wait
 	}
+
 }

@@ -1,0 +1,67 @@
+﻿<UserControl x:Class="desktopDate.view.TimerBox"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:desktopDate.view"
+	         xmlns:supUI="clr-namespace:csharpHelp.ui"
+             mc:Ignorable="d" 
+             d:DesignHeight="300" d:DesignWidth="250">
+	<Grid>
+		<Grid.RowDefinitions>
+			<RowDefinition Height="40"/>
+			<RowDefinition Height="4"/>
+			<RowDefinition Height="*"/>
+		</Grid.RowDefinitions>
+
+		<Grid>
+			<Image HorizontalAlignment="Left" Margin="7" Source="/desktopDate;component/resource/image/timer.png"/>
+			<Label Margin="40,0,0,0" Padding="0" Foreground="#fff" VerticalContentAlignment="Center" HorizontalAlignment="Left" FontSize="18" Content="00:00:00"/>
+			<StackPanel HorizontalAlignment="Right" Orientation="Horizontal">
+				<supUI:MiniButton ImagePadding="11" Background="Transparent" Source="/desktopDate;component/resource/image/pause.png"/>
+				<supUI:MiniButton ImagePadding="11" Background="Transparent" Source="/desktopDate;component/resource/image/stop.png"/>
+			</StackPanel>
+		</Grid>
+
+		<ListBox Grid.Row="2" Background="Transparent" BorderThickness="0" FocusVisualStyle="{x:Null}" ScrollViewer.HorizontalScrollBarVisibility="Disabled" Name="lstTimer">
+			<ListBox.ItemContainerStyle>
+				<Style TargetType="ListBoxItem" BasedOn="{StaticResource ListBoxItemWin7}">
+					<Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+					<Setter Property="Padding" Value="0"/>
+					<Style.Resources>
+						<SolidColorBrush x:Key="{x:Static SystemColors.HighlightBrushKey}" Color="Transparent"/>
+						<SolidColorBrush x:Key="{x:Static SystemColors.ControlBrushKey}" Color="Transparent"/>
+						<SolidColorBrush x:Key="{x:Static SystemColors.InactiveSelectionHighlightBrushKey}" Color="Transparent"/>
+					</Style.Resources>
+				</Style>
+			</ListBox.ItemContainerStyle>
+			<ListBox.ItemTemplate>
+				<DataTemplate>
+					<Border BorderThickness="0,0,0,1" BorderBrush="#fff" Background="Transparent" Name="grdBox">
+						<Grid Background="Transparent">
+							<Grid Margin="5,0,0,0">
+								<Grid.RowDefinitions>
+									<RowDefinition Height="25"/>
+									<RowDefinition Height="15"/>
+								</Grid.RowDefinitions>
+								<Label Grid.Row="0" Padding="0" VerticalAlignment="Center" FontSize="16" Foreground="#f1a1ee" Content="{Binding Name}"/>
+								<Label Grid.Row="1" Padding="0" VerticalAlignment="Center" FontSize="10" Foreground="#bababa" Margin="0,0,0,3" Content="{Binding Time}"/>
+							</Grid>
+							<Label Padding="0,0,5,0" HorizontalAlignment="Right" VerticalContentAlignment="Center" FontSize="12" Foreground="{Binding DayOfRangeColor}" Content="{Binding DayOfRange}"/>
+						</Grid>
+					</Border>
+				</DataTemplate>
+			</ListBox.ItemTemplate>
+		</ListBox>
+
+		<Grid.Style>
+			<Style TargetType="Grid">
+				<Style.Triggers>
+					<DataTrigger Binding="{supUI:IsDesignBind}" Value="True">
+						<Setter Property="Background" Value="#4d4d4d"/>
+					</DataTrigger>
+				</Style.Triggers>
+			</Style>
+		</Grid.Style>
+	</Grid>
+</UserControl>

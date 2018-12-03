@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -21,7 +22,22 @@ namespace csharpHelp.ui {
 		}
 
 		public MiniButton() {
-			
+
+		}
+
+		//Image Padding
+		public static readonly DependencyProperty ImagePaddingPro = DependencyProperty.Register("ImagePadding", typeof(Thickness), typeof(MiniButton), new PropertyMetadata(new Thickness(0)));
+		public Thickness ImagePadding {
+			get { return (Thickness)GetValue(ImagePaddingPro); }
+			set { SetCurrentValue(ImagePaddingPro, value); }
+		}
+
+		//Source
+		public static readonly DependencyProperty SourcePro = DependencyProperty.Register("Source", typeof(ImageSource), typeof(MiniButton), new PropertyMetadata(null));
+		[Category("Appearance")]
+		public ImageSource Source {
+			get { return (ImageSource)GetValue(SourcePro); }
+			set { SetCurrentValue(SourcePro, value); }
 		}
 
 		//Radius
@@ -31,7 +47,7 @@ namespace csharpHelp.ui {
 			set { SetCurrentValue(RadiusProperty, value); }
 		}
 
-		//Content color
+		//Over Color
 		public static readonly DependencyProperty OverColorProperty = DependencyProperty.Register("OverColor", typeof(Brush), typeof(MiniButton), new PropertyMetadata(new SolidColorBrush((Color)ColorConverter.ConvertFromString("#b8b8b8"))));
 		public Brush OverColor {
 			get { return (Brush)GetValue(OverColorProperty); }
