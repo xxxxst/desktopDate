@@ -42,7 +42,7 @@ namespace desktopDate.view {
 		//Dictionary<string, string> mapFestival = new Dictionary<string, string>();
 		//Dictionary<string, string> mapChineseFestival = new Dictionary<string, string>();
 
-		XmlCtl xmlCfg = null;
+		//XmlCtl xmlCfg = null;
 		DetailWin detailWin = null;
 		XmlModelServer xmlCfgServer = null;
 
@@ -51,16 +51,17 @@ namespace desktopDate.view {
 
 			FestivalServer.ins.init();
 
-			xmlCfg = new XmlCtl();
-			xmlCfg.load("config.xml");
+			//xmlCfg = new XmlCtl();
+			//xmlCfg.load("config.xml");
 			MainModel.ins.cfgMd = new ConfigModel();
-			xmlCfgServer = new XmlModelServer(MainModel.ins.cfgMd, xmlCfg);
+			xmlCfgServer = new XmlModelServer(MainModel.ins.cfgMd, "config.xml");
 			try{
 				xmlCfgServer.loadFromXml();
 				ConfigModel md = MainModel.ins.cfgMd;
-				for(int i = 0; i < md.lstTimer.Count; ++i) {
-					Debug.WriteLine("11:" + md.lstTimer[i]);
-				}
+				
+				//for(int i = 0; i < md.lstBox.Count; ++i) {
+				//	Debug.WriteLine("11:" + md.lstBox[i].timer);
+				//}
 			} catch(Exception ex) {
 				Debug.WriteLine(ex.ToString());
 			}
@@ -391,12 +392,14 @@ namespace desktopDate.view {
 					detailWin = new DetailWin();
 
 					detailWin.onClose = () => {
-						detailWin = null;
+						//detailWin = null;
 					};
 
 					detailWin.Left = Left + Width - detailWin.Width;
 					detailWin.Top = Top - detailWin.Height - 10;
 
+					detailWin.Show();
+				} else {
 					detailWin.Show();
 				}
 			}
@@ -412,9 +415,18 @@ namespace desktopDate.view {
 
 		private void Window_Closed(object sender, EventArgs e) {
 			try {
-				xmlCfgServer.saveToXml();
-				xmlCfg.save();
-			} catch(Exception) { }
+				TimerServer.ins.stop();
+
+				if(detailWin != null) {
+					detailWin.Close();
+					detailWin = null;
+				}
+
+				xmlCfgServer.save();
+				//xmlCfg.save();
+			} catch(Exception ex) {
+				Debug.WriteLine(ex.ToString());
+			}
 		}
 	}
 	

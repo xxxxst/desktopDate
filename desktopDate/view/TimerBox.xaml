@@ -9,19 +9,24 @@
              d:DesignHeight="300" d:DesignWidth="250">
 	<Grid>
 		<Grid.RowDefinitions>
-			<RowDefinition Height="40"/>
+			<RowDefinition Height="50"/>
 			<RowDefinition Height="4"/>
 			<RowDefinition Height="*"/>
 		</Grid.RowDefinitions>
 
 		<Grid>
-			<Image HorizontalAlignment="Left" Margin="7" Source="/desktopDate;component/resource/image/timer.png"/>
-			<Label Margin="40,0,0,0" Padding="0" Foreground="#fff" VerticalContentAlignment="Center" HorizontalAlignment="Left" FontSize="18" Content="00:00:00"/>
+			<StackPanel HorizontalAlignment="Left" Orientation="Horizontal">
+				<Image HorizontalAlignment="Left" Margin="5,10" Source="/desktopDate;component/resource/image/timer.png"/>
+				<Label Padding="0" Foreground="#fff" VerticalContentAlignment="Center" HorizontalAlignment="Left" FontSize="18" Content="00:00:00" Name="lblNowTime"/>
+			</StackPanel>
 			<StackPanel HorizontalAlignment="Right" Orientation="Horizontal">
-				<supUI:MiniButton ImagePadding="11" Background="Transparent" Source="/desktopDate;component/resource/image/pause.png"/>
-				<supUI:MiniButton ImagePadding="11" Background="Transparent" Source="/desktopDate;component/resource/image/stop.png"/>
+				<supUI:MiniButton ImagePadding="9" Background="Transparent" Height="35" VerticalAlignment="Center" Source="/desktopDate;component/resource/image/start.png" x:Name="btnStartNow" Click="btnStartNow_Click"/>
+				<supUI:MiniButton ImagePadding="9" Background="Transparent" Height="35" VerticalAlignment="Center" Source="/desktopDate;component/resource/image/pause.png" x:Name="btnPause" Click="btnPause_Click"/>
+				<supUI:MiniButton ImagePadding="9" Background="Transparent" Height="35" VerticalAlignment="Center" Source="/desktopDate;component/resource/image/stop.png" x:Name="btnStop" Click="btnStop_Click"/>
+				<supUI:MiniButton ImagePadding="9" Background="Transparent" Height="35" VerticalAlignment="Center" Source="/desktopDate;component/resource/image/add.png" x:Name="btnAdd" Click="btnAdd_Click"/>
 			</StackPanel>
 		</Grid>
+		<Border Grid.Row="1" VerticalAlignment="Bottom" Height="1" Background="#fff"/>
 
 		<ListBox Grid.Row="2" Background="Transparent" BorderThickness="0" FocusVisualStyle="{x:Null}" ScrollViewer.HorizontalScrollBarVisibility="Disabled" Name="lstTimer">
 			<ListBox.ItemContainerStyle>
@@ -39,15 +44,18 @@
 				<DataTemplate>
 					<Border BorderThickness="0,0,0,1" BorderBrush="#fff" Background="Transparent" Name="grdBox">
 						<Grid Background="Transparent">
-							<Grid Margin="5,0,0,0">
-								<Grid.RowDefinitions>
-									<RowDefinition Height="25"/>
-									<RowDefinition Height="15"/>
-								</Grid.RowDefinitions>
-								<Label Grid.Row="0" Padding="0" VerticalAlignment="Center" FontSize="16" Foreground="#f1a1ee" Content="{Binding Name}"/>
-								<Label Grid.Row="1" Padding="0" VerticalAlignment="Center" FontSize="10" Foreground="#bababa" Margin="0,0,0,3" Content="{Binding Time}"/>
+							<Grid Margin="5,0,0,0" Height="35">
+								<Grid.ColumnDefinitions>
+									<ColumnDefinition Width="*"/>
+									<ColumnDefinition Width="Auto"/>
+								</Grid.ColumnDefinitions>
+								<Label Grid.Column="0" Padding="0" VerticalAlignment="Center" FontSize="16" Foreground="#f1a1ee" Content="{Binding Time}"/>
+
+								<StackPanel Grid.Column="1" HorizontalAlignment="Right" Orientation="Horizontal">
+									<supUI:MiniButton ImagePadding="6" Background="Transparent" Height="26" VerticalAlignment="Center" Tag="{Binding .}" Source="/desktopDate;component/resource/image/start.png" x:Name="btnStart" Click="btnStart_Click"/>
+									<supUI:MiniButton ImagePadding="6" Background="Transparent" Height="26" VerticalAlignment="Center" Tag="{Binding .}" Source="/desktopDate;component/resource/image/delete.png" x:Name="btnDelete" Click="btnDelete_Click"/>
+								</StackPanel>
 							</Grid>
-							<Label Padding="0,0,5,0" HorizontalAlignment="Right" VerticalContentAlignment="Center" FontSize="12" Foreground="{Binding DayOfRangeColor}" Content="{Binding DayOfRange}"/>
 						</Grid>
 					</Border>
 				</DataTemplate>

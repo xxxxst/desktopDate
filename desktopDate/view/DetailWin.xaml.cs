@@ -86,7 +86,8 @@ namespace desktopDate.view {
 		private void Window_Deactivated(object sender, EventArgs e) {
 			onClose?.Invoke();
 
-			Close();
+			//Close();
+			Hide();
 		}
 
 		private void btnFestival_Click(object sender, RoutedEventArgs e) {

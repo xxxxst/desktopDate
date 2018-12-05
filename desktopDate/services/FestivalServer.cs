@@ -158,7 +158,6 @@ namespace desktopDate.services {
 
 			for(int i = 0; i < lstFestival.Count; ++i) {
 				try {
-
 					string[] arr = lstFestival[i].time.Split('/');
 					int month = Convert.ToInt32(arr[0]);
 					int day = Convert.ToInt32(arr[1]);
