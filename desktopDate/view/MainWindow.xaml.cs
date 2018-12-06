@@ -31,6 +31,8 @@ namespace desktopDate.view {
 	/// MainWindow.xaml 的交互逻辑
 	/// </summary>
 	public partial class MainWindow : Window {
+		public static MainWindow ins = null;
+
 		static Dictionary<string, Key> mapKey = new Dictionary<string, Key>();
 		//public Dictionary<Key, string> mapCtlKey = new Dictionary<Key, string>();
 		//public Dictionary<Key, string> mapIgnoreKey = new Dictionary<Key, string>();
@@ -39,9 +41,6 @@ namespace desktopDate.view {
 		ChineseLunisolarCalendar ChineseCalendar = new ChineseLunisolarCalendar();
 		bool isShowChineseDate = false;
 
-		//Dictionary<string, string> mapFestival = new Dictionary<string, string>();
-		//Dictionary<string, string> mapChineseFestival = new Dictionary<string, string>();
-
 		//XmlCtl xmlCfg = null;
 		DetailWin detailWin = null;
 		XmlModelServer xmlCfgServer = null;
@@ -49,7 +48,8 @@ namespace desktopDate.view {
 		public MainWindow() {
 			InitializeComponent();
 
-			FestivalServer.ins.init();
+			ins = this;
+			MainModel.ins.mainWIn = this;
 
 			//xmlCfg = new XmlCtl();
 			//xmlCfg.load("config.xml");
@@ -68,6 +68,17 @@ namespace desktopDate.view {
 
 			//ignoreMouseEvent();
 			setPos();
+		}
+
+		public static IntPtr getHandle() {
+			return new WindowInteropHelper(ins).Handle;
+		}
+
+		private void Window_Loaded(object sender, RoutedEventArgs e) {
+			appendToWindow();
+			
+			FestivalServer.ins.init();
+			TimerServer.ins.init();
 
 			updateDate();
 
@@ -80,10 +91,6 @@ namespace desktopDate.view {
 			readDataTimer.Tick += new EventHandler(timerProc);
 			readDataTimer.Interval = new TimeSpan(0, 0, 0, 1);
 			readDataTimer.Start();
-		}
-
-		private void Window_Loaded(object sender, RoutedEventArgs e) {
-			appendToWindow();
 		}
 
 		private void initKeys() {
@@ -119,11 +126,11 @@ namespace desktopDate.view {
 			IntPtr Handle = new WindowInteropHelper(this).Handle;
 
 			//隐藏边框
-			long oldstyle = ComUtil.GetWindowLong(Handle, ComUtil.GWL_STYLE);
+			int oldstyle = ComUtil.GetWindowLong(Handle, ComUtil.GWL_STYLE);
 			ComUtil.SetWindowLong(Handle, ComUtil.GWL_STYLE, oldstyle & (~(ComUtil.WS_CAPTION | ComUtil.WS_CAPTION_2)) | ComUtil.WS_EX_LAYERED);
 
 			//不在Alt+Tab中显示
-			long oldExStyle = ComUtil.GetWindowLong(Handle, ComUtil.GWL_EXSTYLE);
+			int oldExStyle = ComUtil.GetWindowLong(Handle, ComUtil.GWL_EXSTYLE);
 			ComUtil.SetWindowLong(Handle, ComUtil.GWL_EXSTYLE, oldExStyle & (~ComUtil.WS_EX_APPWINDOW) | ComUtil.WS_EX_TOOLWINDOW);
 
 			//win7
@@ -200,32 +207,6 @@ namespace desktopDate.view {
 			//SetWindowLong(Handle, GWL_EXSTYLE, GetWindowLong(Handle, GWL_EXSTYLE) | WS_EX_TRANSPARENT | WS_EX_LAYERED);
 			//SetLayeredWindowAttributes(Handle, 0, 128, LWA_ALPHA);
 		}
-
-		//private void initFestival() {
-		//	mapFestival["01/01"] = "元旦";
-		//	mapFestival["02/14"] = "情人节";
-		//	mapFestival["03/08"] = "妇女节";
-		//	mapFestival["03/12"] = "植树节";
-		//	mapFestival["04/01"] = "愚人节";
-		//	mapFestival["05/01"] = "劳动节";
-		//	mapFestival["06/01"] = "儿童节";
-		//	mapFestival["08/01"] = "建军节";
-		//	mapFestival["08/12"] = "青年节";
-		//	mapFestival["09/10"] = "教师节";
-		//	mapFestival["10/01"] = "国庆节";
-		//	mapFestival["11/01"] = "万圣节";
-		//	mapFestival["11/26"] = "感恩节";
-		//	mapFestival["12/24"] = "平安夜";
-		//	mapFestival["12/25"] = "圣诞节";
-
-		//	mapChineseFestival["12/30"] = "除夕";
-		//	mapChineseFestival["01/01"] = "春节";
-		//	mapChineseFestival["01/15"] = "元宵节";
-		//	mapChineseFestival["05/05"] = "端午节";
-		//	mapChineseFestival["07/07"] = "七夕节";
-		//	mapChineseFestival["08/15"] = "中秋节";
-		//	mapChineseFestival["09/09"] = "重阳节";
-		//}
 
 		private void setPos() {
 			int w = 0;
@@ -390,6 +371,7 @@ namespace desktopDate.view {
 			if(e.ChangedButton == MouseButton.Left) {
 				if(detailWin == null) {
 					detailWin = new DetailWin();
+					MainModel.ins.detailWin = detailWin;
 
 					detailWin.onClose = () => {
 						//detailWin = null;

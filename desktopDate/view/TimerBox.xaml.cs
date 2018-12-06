@@ -33,6 +33,13 @@ namespace desktopDate.view {
 		public TimerBox() {
 			InitializeComponent();
 
+			if(DesignerProperties.GetIsInDesignMode(this)) {
+				return;
+			}
+
+			grdSetting.Visibility = Visibility.Collapsed;
+			txtMusic.Text = MainModel.ins.cfgMd.timerMusicPath;
+
 			arrTimer = MainModel.ins.cfgMd.lstTimer;
 			for(int i = 0; i < arrTimer.Count; ++i) {
 				TimerVM vm = new TimerVM();
@@ -44,17 +51,26 @@ namespace desktopDate.view {
 
 			lstTimer.ItemsSource = lstTimerVM;
 
-			TimerServer.ins.onTimerUpdated = (int _nowSecond, int _totalSecond)=> {
+			TimerServer.ins.onTimerUpdated = (int _nowSecond, int _totalSecond) => {
 				nowSecond = _nowSecond;
 				Dispatcher.Invoke(updateNowTime);
 			};
 
 			TimerServer.ins.onTimerFinished = () => {
 				nowSecond = 0;
-				Dispatcher.Invoke(()=> {
+				Dispatcher.Invoke(() => {
+					var win = MainModel.ins.detailWin;
+					if(!win.IsVisible) {
+						win.Show();
+					}
+
 					updateNowTime();
 					updateTimerStatus();
 				});
+			};
+
+			TimerServer.ins.onPlayMusicFinished = () => {
+				Dispatcher.Invoke(updateTimerStatus);
 			};
 
 			updateTimerStatus();
@@ -69,7 +85,11 @@ namespace desktopDate.view {
 			TimerServer ins = TimerServer.ins;
 			btnStartNow.Visibility = ins.isStart() && ins.isPause ? Visibility.Visible : Visibility.Collapsed;
 			btnPause.Visibility = ins.isStart() && !ins.isPause ? Visibility.Visible : Visibility.Collapsed;
-			btnStop.Visibility = ins.isStart() || ins.isPlay ? Visibility.Visible : Visibility.Collapsed;
+			btnStop.Visibility = ins.isStart() || ins.isPlay() ? Visibility.Visible : Visibility.Collapsed;
+			btnSetting.Visibility = !ins.isStart() && !ins.isPlay() ? Visibility.Visible : Visibility.Collapsed;
+
+			imgIcon.Visibility = !ins.isPlay() ? Visibility.Visible : Visibility.Collapsed;
+			imgIconRotate.Visibility = ins.isPlay() ? Visibility.Visible : Visibility.Collapsed;
 		}
 
 		private string formatTime(int totalSecond) {
@@ -105,12 +125,23 @@ namespace desktopDate.view {
 			TimerModel md = new TimerModel();
 			TimerVM vm = new TimerVM() {
 				Index = lstTimerVM.Count,
-				md = md
+				md = md,
+				IsNew = true,
 			};
-			
+
+			foreach(var item in lstTimerVM) {
+				item.IsNew = false;
+			}
+
 			arrTimer.Add(md);
 			lstTimerVM.Add(vm);
 			lstTimer.ScrollIntoView(lstTimerVM.Last());
+		}
+
+		private void btnSetting_Click(object sender, RoutedEventArgs e) {
+			btnSetting.IsSelect = !btnSetting.IsSelect;
+			grdTimer.Visibility = btnSetting.IsSelect ? Visibility.Collapsed : Visibility.Visible;
+			grdSetting.Visibility = !btnSetting.IsSelect ? Visibility.Collapsed : Visibility.Visible;
 		}
 
 		private void btnStart_Click(object sender, RoutedEventArgs e) {
@@ -133,6 +164,10 @@ namespace desktopDate.view {
 			}
 		}
 
+		private void txtMusic_TextChanged(object sender, TextChangedEventArgs e) {
+			MainModel.ins.cfgMd.timerMusicPath = txtMusic.Text;
+			//Debug.WriteLine(txtMusic.Text);
+		}
 	}
 
 	public class TimerVM : INotifyPropertyChanged {
@@ -148,6 +183,16 @@ namespace desktopDate.view {
 		public string Time {
 			get { return _Time; }
 			set { _Time = value; updatePro("Time"); }
+		}
+
+		bool _IsNew = false;
+		public bool IsNew {
+			get { return _IsNew; }
+			set { _IsNew = value; updatePro("IsNew"); updatePro("IsNewVisibility"); }
+		}
+
+		public Visibility IsNewVisibility {
+			get { return _IsNew ? Visibility.Visible : Visibility.Collapsed; }
 		}
 
 		public virtual event PropertyChangedEventHandler PropertyChanged;

@@ -1,0 +1,35 @@
+﻿<Window x:Class="desktopDate.view.AboutWin"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:desktopDate.view"
+        mc:Ignorable="d"
+        Title="关于" Height="450" Width="800" WindowStartupLocation="CenterScreen" WindowStyle="None" ResizeMode="NoResize" Background="#4d4d4d" ShowInTaskbar="False" Loaded="Window_Loaded" MouseUp="Window_MouseUp" Deactivated="Window_Deactivated">
+    <Grid>
+
+		<Grid Margin="8">
+			<Grid.ColumnDefinitions>
+				<ColumnDefinition Width="150"/>
+				<ColumnDefinition Width="16"/>
+				<ColumnDefinition Width="*"/>
+			</Grid.ColumnDefinitions>
+
+			<Image Width="100" Margin="50,20,0,0" VerticalAlignment="Top" HorizontalAlignment="Left" Source="/desktopDate;component/resource/image/icon.png"/>
+
+			<StackPanel Grid.Column="2">
+				<Label HorizontalAlignment="Left" Foreground="#fff" FontSize="30" Content="Desktop Date"/>
+				<Label HorizontalAlignment="Left" Foreground="#fff" Content="version：1.0.0"/>
+				<Label HorizontalAlignment="Left" Foreground="#fff" Content="copyright(C) 2018 xxxxst"/>
+				<StackPanel Orientation="Horizontal">
+					<Label HorizontalAlignment="Left" Foreground="#fff" Content="source code - "/>
+					<Label HorizontalAlignment="Left" Foreground="#7c92ff" Cursor="Hand" Content=""/>
+				</StackPanel>
+				<StackPanel Orientation="Horizontal">
+					<Label HorizontalAlignment="Left" Foreground="#fff" Content="fmod -"/>
+					<Label HorizontalAlignment="Left" Foreground="#f1a1ee" Cursor="Hand" Content="https://www.fmod.com/" Name="lblFmodUrl" MouseUp="lblUrlJump_MouseUp"/>
+				</StackPanel>
+			</StackPanel>
+		</Grid>
+	</Grid>
+</Window>

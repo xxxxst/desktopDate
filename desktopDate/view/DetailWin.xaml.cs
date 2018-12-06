@@ -75,16 +75,20 @@ namespace desktopDate.view {
 			IntPtr Handle = new WindowInteropHelper(this).Handle;
 
 			//隐藏边框
-			long oldstyle = ComUtil.GetWindowLong(Handle, ComUtil.GWL_STYLE);
+			int oldstyle = ComUtil.GetWindowLong(Handle, ComUtil.GWL_STYLE);
 			ComUtil.SetWindowLong(Handle, ComUtil.GWL_STYLE, oldstyle & (~(ComUtil.WS_CAPTION | ComUtil.WS_CAPTION_2)) | ComUtil.WS_EX_LAYERED);
 
 			//不在Alt+Tab中显示
-			long oldExStyle = ComUtil.GetWindowLong(Handle, ComUtil.GWL_EXSTYLE);
+			int oldExStyle = ComUtil.GetWindowLong(Handle, ComUtil.GWL_EXSTYLE);
 			ComUtil.SetWindowLong(Handle, ComUtil.GWL_EXSTYLE, oldExStyle & (~ComUtil.WS_EX_APPWINDOW) | ComUtil.WS_EX_TOOLWINDOW);
 		}
 
 		private void Window_Deactivated(object sender, EventArgs e) {
 			onClose?.Invoke();
+
+			if(TimerServer.ins.isPlay()) {
+				return;
+			}
 
 			//Close();
 			Hide();
@@ -116,6 +120,10 @@ namespace desktopDate.view {
 
 			btnTimer.Background = selectButtonBackground;
 			grdTimer.Visibility = Visibility.Visible;
+		}
+
+		private void btnAbout_Click(object sender, RoutedEventArgs e) {
+			(new AboutWin()).Show();
 		}
 	}
 

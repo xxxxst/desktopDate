@@ -28,10 +28,63 @@
 
 	<Style TargetType="{x:Type ScrollViewer}" BasedOn="{StaticResource ComScrollViewStyle}"></Style>
 
+	<!--TextBoxTip-->
+	<Style BasedOn="{StaticResource BaseTextBoxTip}" TargetType="{x:Type supUI:TextBoxTip}"  >
+		<Setter Property="BorderThickness" Value="0,0,0,1"/>
+		<Setter Property="BorderBrush" Value="#fff"/>
+		<Setter Property="Foreground" Value="#fff"/>
+		<Setter Property="VerticalContentAlignment" Value="Bottom"/>
+	</Style>
+
+	<!--TextBoxFile-->
+	<Style BasedOn="{StaticResource BaseTextBoxFile}" TargetType="{x:Type supUI:TextBoxFile}">
+		<Setter Property="BorderThickness" Value="0,0,0,1"/>
+		<Setter Property="BorderBrush" Value="#fff"/>
+		<Setter Property="ButtonColor" Value="#fff"/>
+		<Setter Property="Foreground" Value="#fff"/>
+		<Setter Property="CaretBrush" Value="#fff"/>
+		<Setter Property="ContentColor" Value="#fff"/>
+		<Setter Property="VerticalContentAlignment" Value="Bottom"/>
+	</Style>
+
+	<!--TextBoxCheckbox-->
+	<Style BasedOn="{StaticResource BaseTextBoxCheckbox}" TargetType="{x:Type supUI:TextBoxCheckbox}" >
+		<Setter Property="ButtonWidth" Value="0"/>
+		<Setter Property="BorderThickness" Value="0,0,0,1"/>
+		<Setter Property="BorderBrush" Value="#fff"/>
+		<Setter Property="Foreground" Value="#fff"/>
+		<Setter Property="VerticalContentAlignment" Value="Bottom"/>
+	</Style>
+
+	<!--TextBoxLabel-->
+	<Style BasedOn="{StaticResource BaseTextBoxLabel}" TargetType="{x:Type supUI:TextBoxLabel}">
+		<Setter Property="BorderThickness" Value="0,0,0,1"/>
+		<Setter Property="BorderBrush" Value="#fff"/>
+		<Setter Property="Foreground" Value="#fff"/>
+		<Setter Property="VerticalContentAlignment" Value="Bottom"/>
+	</Style>
+
+	<!--CheckBoxBan-->
+	<Style BasedOn="{StaticResource BaseCheckBoxBan}" TargetType="{x:Type supUI:CheckBoxBan}"  >
+		<Setter Property="Background" Value="#6ceff7"/>
+		<Setter Property="Padding" Value="5,0,0,0"/>
+		<Setter Property="Foreground" Value="#fff"/>
+		<Setter Property="VerticalContentAlignment" Value="Bottom"/>
+	</Style>
+
+	<!--ComboBoxLabel-->
+	<Style BasedOn="{StaticResource BaseComboBoxLabel}" TargetType="{x:Type supUI:ComboBoxLabel}"  >
+		<Setter Property="BorderThickness" Value="0,0,0,1"/>
+		<Setter Property="BorderBrush" Value="#fff"/>
+		<Setter Property="Foreground" Value="#fff"/>
+		<Setter Property="VerticalContentAlignment" Value="Bottom"/>
+	</Style>
+
 	<!--MiniButton-->
 	<Style BasedOn="{StaticResource BaseMiniButton}" TargetType="{x:Type supUI:MiniButton}">
 		<Setter Property="Foreground" Value="#fff"/>
 		<Setter Property="Background" Value="Transparent"/>
+		<Setter Property="SelectColor" Value="#272727"/>
 		<Setter Property="Padding" Value="0"/>
 		<Setter Property="OverColor" Value="#353535"/>
 	</Style>

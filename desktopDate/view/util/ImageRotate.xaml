@@ -1,0 +1,55 @@
+﻿<UserControl x:Class="desktopDate.view.util.ImageRotate"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:desktopDate.view.util"
+			 xmlns:supUI="clr-namespace:csharpHelp.ui"
+             mc:Ignorable="d" 
+             d:DesignHeight="100" d:DesignWidth="100" VerticalAlignment="Center" HorizontalAlignment="Center">
+    <Grid>
+		<Image Visibility="{Binding Visibility, RelativeSource={RelativeSource TemplatedParent}}" RenderTransformOrigin="0.5, 0.5" Source="{Binding Source, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type local:ImageRotate}}}" supUI:XEvtTrigger.IsEnabledIsLoaded="True">
+			<Image.RenderTransform>
+				<RotateTransform />
+			</Image.RenderTransform>
+			<Image.Style>
+				<Style TargetType="Image">
+					<Style.Triggers>
+						<Trigger Property="supUI:XEvtTrigger.IsLoaded" Value="True">
+							<Trigger.EnterActions>
+								<BeginStoryboard Name="OpacityStoryboard">
+									<Storyboard>
+										<DoubleAnimation Storyboard.TargetProperty="(Image.RenderTransform).(RotateTransform.Angle)" From="0" To="360" RepeatBehavior="Forever" AutoReverse="False" />
+									</Storyboard>
+								</BeginStoryboard>
+								<PauseStoryboard BeginStoryboardName="OpacityStoryboard"/>
+							</Trigger.EnterActions>
+						</Trigger>
+						<MultiTrigger>
+							<MultiTrigger.Conditions>
+								<Condition Property="IsVisible" Value="True" />
+								<Condition Property="supUI:XEvtTrigger.IsLoaded" Value="True" />
+							</MultiTrigger.Conditions>
+							<MultiTrigger.EnterActions>
+								<ResumeStoryboard BeginStoryboardName="OpacityStoryboard" />
+							</MultiTrigger.EnterActions>
+							<MultiTrigger.ExitActions>
+								<PauseStoryboard BeginStoryboardName="OpacityStoryboard" />
+							</MultiTrigger.ExitActions>
+						</MultiTrigger>
+					</Style.Triggers>
+				</Style>
+			</Image.Style>
+		</Image>
+
+		<Grid.Style>
+			<Style TargetType="Grid">
+				<Style.Triggers>
+					<DataTrigger Binding="{supUI:IsDesignBind}" Value="True">
+						<Setter Property="Background" Value="#4d4d4d"/>
+					</DataTrigger>
+				</Style.Triggers>
+			</Style>
+		</Grid.Style>
+	</Grid>
+</UserControl>

@@ -1,4 +1,5 @@
 ﻿using csharpHelp.services;
+using desktopDate.view;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,12 +9,19 @@ using System.Threading.Tasks;
 namespace desktopDate.model {
 	public class MainModel {
 		public static MainModel ins = new MainModel();
-		
+
+		public DetailWin detailWin = null;
+		public MainWindow mainWIn = null;
+
 		public ConfigModel cfgMd = null;
 	}
 	
 	[XmlRoot("desktopDate")]
 	public class ConfigModel {
+		[XmlAttr("dataVersion")] public string dataVersion = "1.0.0";
+
+		[XmlValue("config.alarmTimeSecond")] public int alarmTimeSecond = 30;
+
 		[XmlAttr("clockBox.music")] public string clockMusicPath = "";
 		[XmlAttr("timerBox.music")] public string timerMusicPath = "";
 

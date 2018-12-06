@@ -6,11 +6,11 @@
         xmlns:local="clr-namespace:desktopDate.view"
 		xmlns:supUI="clr-namespace:csharpHelp.ui"
         mc:Ignorable="d"
-        Title="DetailWin" Height="300" Width="250" WindowStyle="None" ResizeMode="NoResize" Background="#4d4d4d" ShowInTaskbar="False" Loaded="Window_Loaded" Deactivated="Window_Deactivated">
+        Title="DetailWin" Height="330" Width="260" WindowStyle="None" ResizeMode="NoResize" Background="#4d4d4d" ShowInTaskbar="False" Loaded="Window_Loaded" Deactivated="Window_Deactivated">
 	<Grid>
 		<Grid Margin="8">
 			<Grid.RowDefinitions>
-				<RowDefinition Height="25"/>
+				<RowDefinition Height="30"/>
 				<RowDefinition Height="4"/>
 				<RowDefinition Height="165*"/>
 			</Grid.RowDefinitions>
@@ -23,13 +23,17 @@
 						<ColumnDefinition Width="0"/>
 						<ColumnDefinition Width="0"/>
 						<ColumnDefinition Width="*"/>
+						<ColumnDefinition Width="1"/>
+						<ColumnDefinition Width="25"/>
 					</Grid.ColumnDefinitions>
 
 					<supUI:MiniButton Grid.Column="0" Padding="10,0" Background="#2a2a2a" Radius="8,0,0,8" Content="节日" x:Name="btnFestival" Click="btnFestival_Click"/>
 					<Label Grid.Column="1" Padding="0" Background="#b5b5b5"/>
 					<supUI:MiniButton Grid.Column="2" Padding="10,0" Content="闹钟" x:Name="btnClock" Click="btnClock_Click"/>
 					<Label Grid.Column="3" Padding="0" Background="#b5b5b5"/>
-					<supUI:MiniButton Grid.Column="4" Padding="10,0" Radius="0,8,8,0" Content="计时" x:Name="btnTimer" Click="btnTimer_Click"/>
+					<supUI:MiniButton Grid.Column="4" Padding="10,0" Content="计时" x:Name="btnTimer" Click="btnTimer_Click"/>
+					<Label Grid.Column="5" Padding="0" Background="#b5b5b5"/>
+					<supUI:MiniButton Grid.Column="6" Padding="10,0" Radius="0,8,8,0" ImagePadding="4" Source="/desktopDate;component/resource/image/hep.png" x:Name="btnAbout" Click="btnAbout_Click"/>
 				</Grid>
 			</Border>
 

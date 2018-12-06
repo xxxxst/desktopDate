@@ -1,7 +1,10 @@
-﻿using desktopDate.model;
+﻿using desktopDate.control;
+using desktopDate.model;
+using desktopDate.view;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -14,30 +17,43 @@ namespace desktopDate.services {
 		//public bool isStart = false;
 		private TimerModel startTimer = null;
 		private int totalSecond = 0;
-		private long parseNS = 0;
 		private int nowSecond = 0;
 		public bool isPause = false;
-		public bool isPlay = false;
+		//public bool isPlay = false;
 
 		public Action<int, int> onTimerUpdated = null;
 		public Action onTimerFinished = null;
+		public Action onPlayMusicFinished = null;
 
+		private MusicPlayer musicPlayer = null;
+
+		//private long nowNS = 0;
+		private long parseNS = 0;
 		private long startTime = 0;
 		private long parseTime = 0;
 		private Timer timer = null;
+		private SetTimeout waitAlarm = null;
+
+		public void init() {
+			musicPlayer = new MusicPlayer();
+			musicPlayer.handle = MainWindow.getHandle();
+		}
 
 		public bool isStart() {
 			return startTimer != null;
 		}
 
 		public void restart(TimerModel _startTimer) {
-			if(isStart()) {
-				stop();
+			stop();
+
+			if(_startTimer.totalSecond <= 0) {
+				onTimerFinished?.Invoke();
+				return;
 			}
 
 			startTimer = _startTimer;
 			isPause = false;
-			isPlay = false;
+			//isPlay = false;
 
 			parseNS = 0;
 			totalSecond = startTimer.totalSecond;
@@ -46,7 +62,7 @@ namespace desktopDate.services {
 
 			timer = new Timer();
 			timer.Enabled = true;
-			timer.Interval = 1000;
+			timer.Interval = 200;
 			timer.Elapsed += timerProc;
 			timer.Start();
 		}
@@ -69,9 +85,25 @@ namespace desktopDate.services {
 		}
 
 		public void stop() {
-			if(timer != null) {
-				timer.Stop();
-				timer = null;
+			try {
+				if(timer != null) {
+					timer.Stop();
+					timer = null;
+				}
+
+				bool isPlay = musicPlayer.isPlay();
+				musicPlayer.stop();
+
+				if(isPlay) {
+					onPlayMusicFinished?.Invoke();
+				}
+
+				if(waitAlarm != null) {
+					waitAlarm.stop();
+					waitAlarm = null;
+				}
+			} catch(Exception) {
+
 			}
 
 			startTimer = null;
@@ -82,12 +114,46 @@ namespace desktopDate.services {
 				return;
 			}
 			long nowTime = DateTime.Now.ToFileTimeUtc();
-			nowSecond = totalSecond - (int)((nowTime - startTime - parseNS) /10000000);
+			long nowNS = nowTime - startTime - parseNS;
+			int second = totalSecond - (int)(nowNS / 10000000);
+			if(second >= nowSecond) {
+				return;
+			}
+			nowSecond = second;
 
 			onTimerUpdated?.Invoke(nowSecond, totalSecond);
 			if(nowSecond <= 0) {
 				stop();
+				playMusic();
 				onTimerFinished?.Invoke();
+			}
+		}
+
+		public bool isPlay() {
+			return musicPlayer.isPlay();
+		}
+		
+		private void playMusic() {
+			string path = MainModel.ins.cfgMd.timerMusicPath;
+			if(!File.Exists(path)) {
+				return;
+			}
+
+			//isPlay = true;
+			try {
+				musicPlayer.path = path;
+				musicPlayer.play();
+
+				int waitTime = MainModel.ins.cfgMd.alarmTimeSecond;
+				if(waitTime <= 0 || waitTime > 3600) {
+					waitTime = 30;
+				}
+
+				waitAlarm = new SetTimeout(() => {
+					stop();
+				}, waitTime * 1000);
+			} catch(Exception ex) {
+				Debug.WriteLine(ex.ToString());
 			}
 		}
 	}

@@ -38,6 +38,9 @@
 						<Trigger Property="IsMouseOver" Value="True">
 							<Setter Property="Background" TargetName="bd" Value="{Binding OverColor,RelativeSource={RelativeSource TemplatedParent}}"/>
 						</Trigger>
+						<DataTrigger Binding="{Binding IsSelect, RelativeSource={RelativeSource Self}}" Value="True">
+							<Setter Property="Background" TargetName="bd" Value="{Binding SelectColor,RelativeSource={RelativeSource TemplatedParent}}"/>
+						</DataTrigger>
 					</ControlTemplate.Triggers>
 				</ControlTemplate>
 			</Setter.Value>
@@ -47,5 +50,6 @@
 	<Style BasedOn="{StaticResource BaseMiniButton}" TargetType="{x:Type local:MiniButton}">
 		<Setter Property="Background" Value="#a1a1a1"/>
 		<Setter Property="OverColor" Value="#b8b8b8"/>
+		<Setter Property="SelectColor" Value="#a1a1a1"/>
 	</Style>
 </ResourceDictionary>

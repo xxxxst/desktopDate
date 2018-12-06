@@ -22,9 +22,9 @@ namespace desktopDate.util {
 		[DllImport("user32.dll", SetLastError = true)]
 		public static extern IntPtr SetParent(IntPtr hWndChild, IntPtr hWndNewParent);
 		[DllImport("user32.dll")]
-		public static extern long GetWindowLong(IntPtr hwnd, int nIndex);
+		public static extern int GetWindowLong(IntPtr hwnd, int nIndex);
 		[DllImport("user32.dll")]
-		public static extern int SetWindowLong(IntPtr hwnd, int nIndex, long dwNewLong);
+		public static extern int SetWindowLong(IntPtr hwnd, int nIndex, int dwNewLong);
 		[DllImport("user32.dll")]
 		public static extern int SetLayeredWindowAttributes(IntPtr Handle, int crKey, byte bAlpha, int dwFlags);
 		public const int GWL_EXSTYLE = -20;
@@ -42,8 +42,8 @@ namespace desktopDate.util {
 		public static extern uint GetLastError();
 
 		public const int GWL_STYLE = -16;
-		public const long WS_CAPTION = 0x00C00000L;
-		public const long WS_CAPTION_2 = 0X00C0000L;
+		public const int WS_CAPTION = 0x00C00000;
+		public const int WS_CAPTION_2 = 0X00C0000;
 
 		[DllImport("user32.dll")]
 		public extern static bool SetLayeredWindowAttributes(IntPtr hwnd, uint crKey, byte bAlpha, uint dwFlags);

@@ -6,6 +6,13 @@
 	<Application.Resources>
 		<ResourceDictionary>
 			<ResourceDictionary.MergedDictionaries>
+				<ResourceDictionary Source="/sdk/csharpHelp/TextBoxTip/TextBoxTip.xaml" />
+				<ResourceDictionary Source="/sdk/csharpHelp/TextBoxLabel/TextBoxLabel.xaml" />
+				<ResourceDictionary Source="/sdk/csharpHelp/CheckBoxBan/CheckBoxBan.xaml" />
+				<ResourceDictionary Source="/sdk/csharpHelp/LabelSingle/LabelSingle.xaml" />
+				<ResourceDictionary Source="/sdk/csharpHelp/TextBoxCheckbox/TextBoxCheckbox.xaml" />
+				<ResourceDictionary Source="/sdk/csharpHelp/TextBoxFile/TextBoxFile.xaml" />
+				<ResourceDictionary Source="/sdk/csharpHelp/ComboBoxLabel/ComboBoxLabel.xaml" />
 				<ResourceDictionary Source="/sdk/csharpHelp/MiniButton/MiniButton.xaml" />
 
 				<ResourceDictionary Source="view/style/ListBoxItemWin7.xaml"/>
