@@ -1,4 +1,4 @@
-﻿<UserControl x:Class="desktopDate.view.TimerBox"
+﻿<UserControl x:Class="desktopDate.view.ClockBox"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
@@ -8,7 +8,7 @@
 	         xmlns:supUI="clr-namespace:csharpHelp.ui"
              mc:Ignorable="d" 
              d:DesignHeight="330" d:DesignWidth="260">
-	<Grid>
+    <Grid>
 		<Grid.RowDefinitions>
 			<RowDefinition Height="50"/>
 			<RowDefinition Height="4"/>
@@ -18,17 +18,15 @@
 		<Grid>
 			<StackPanel HorizontalAlignment="Left" Orientation="Horizontal">
 				<Grid Margin="4,12">
-					<Image HorizontalAlignment="Left" Source="/desktopDate;component/resource/image/timer.png" Name="imgIcon"/>
-					<util:ImageRotate HorizontalAlignment="Left" Visibility="Collapsed" Source="/desktopDate;component/resource/image/timer.png" x:Name="imgIconRotate"/>
+					<Image HorizontalAlignment="Left" Source="/desktopDate;component/resource/image/clock.png" Name="imgIcon"/>
+					<util:ImageRotate HorizontalAlignment="Left" Visibility="Collapsed" Source="/desktopDate;component/resource/image/clock.png" x:Name="imgIconRotate"/>
 				</Grid>
 				<Label Padding="0" Foreground="#fff" VerticalContentAlignment="Center" HorizontalAlignment="Left" FontSize="20" Content="00:00:00" Name="lblNowTime"/>
 			</StackPanel>
 			<StackPanel HorizontalAlignment="Right" Orientation="Horizontal">
-				<supUI:MiniButton ImagePadding="6" Background="Transparent" Height="30" VerticalAlignment="Center" Radius="5" Source="/desktopDate;component/resource/image/start.png" x:Name="btnStartNow" Click="btnStartNow_Click"/>
-				<supUI:MiniButton ImagePadding="6" Background="Transparent" Height="30" VerticalAlignment="Center" Radius="5" Source="/desktopDate;component/resource/image/pause.png" x:Name="btnPause" Click="btnPause_Click"/>
 				<supUI:MiniButton ImagePadding="6" Background="Transparent" Height="30" VerticalAlignment="Center" Radius="5" Source="/desktopDate;component/resource/image/stop.png" x:Name="btnStop" Click="btnStop_Click"/>
-                <supUI:MiniButton ImagePadding="6" Background="Transparent" Height="30" VerticalAlignment="Center" Radius="5" Source="/desktopDate;component/resource/image/setting.png" x:Name="btnSetting" Click="btnSetting_Click"/>
-                <supUI:MiniButton ImagePadding="6" Background="Transparent" Height="30" VerticalAlignment="Center" Radius="5" Source="/desktopDate;component/resource/image/add.png" x:Name="btnAdd" Click="btnAdd_Click"/>
+				<supUI:MiniButton ImagePadding="6" Background="Transparent" Height="30" VerticalAlignment="Center" Radius="5" Source="/desktopDate;component/resource/image/setting.png" x:Name="btnSetting" Click="btnSetting_Click"/>
+				<supUI:MiniButton ImagePadding="6" Background="Transparent" Height="30" VerticalAlignment="Center" Radius="5" Source="/desktopDate;component/resource/image/add.png" x:Name="btnAdd" Click="btnAdd_Click"/>
 			</StackPanel>
 		</Grid>
 		<Border Grid.Row="1" VerticalAlignment="Bottom" Height="1" Background="#fff"/>
@@ -60,15 +58,12 @@
 										<supUI:MiniButton Padding="0" VerticalAlignment="Center" FontSize="16" Foreground="#f1a1ee" Background="Transparent" OverColor="Transparent" Cursor="Hand" Tag="{Binding .}" Content="{Binding StrHour}" x:Name="lblHour" Click="lblHour_Click"/>
 										<Label Padding="0" VerticalAlignment="Center" FontSize="16" Foreground="#f1a1ee" Background="Transparent" Content=":"/>
 										<supUI:MiniButton Padding="0" VerticalAlignment="Center" FontSize="16" Foreground="#f1a1ee" Background="Transparent" OverColor="Transparent" Cursor="Hand" Tag="{Binding .}" Content="{Binding StrMinute}" x:Name="lblMinute" Click="lblMinute_Click"/>
-										<Label Padding="0" VerticalAlignment="Center" FontSize="16" Foreground="#f1a1ee" Background="Transparent" Content=":"/>
-										<supUI:MiniButton Padding="0" VerticalAlignment="Center" FontSize="16" Foreground="#f1a1ee" Background="Transparent" OverColor="Transparent" Cursor="Hand" Tag="{Binding .}" Content="{Binding StrSecond}" x:Name="lblSecond" Click="lblSecond_Click"/>
 										<Border Margin="8,0,0,0" VerticalAlignment="Center" BorderThickness="1" BorderBrush="#56ec5d" CornerRadius="6" Visibility="{Binding IsNewVisibility}">
 											<Label Padding="3,0,3,3" Margin="0" VerticalAlignment="Center" FontSize="11" Foreground="#56ec5d" Content="new"/>
 										</Border>
 									</StackPanel>
 
 									<StackPanel Grid.Column="1" HorizontalAlignment="Right" Orientation="Horizontal" Visibility="{Binding IsNotEditVisibility}">
-										<supUI:MiniButton ImagePadding="6" Background="Transparent" Height="26" VerticalAlignment="Center" Tag="{Binding .}" Source="/desktopDate;component/resource/image/start.png" x:Name="btnStart" Click="btnStart_Click"/>
 										<supUI:MiniButton ImagePadding="6" Background="Transparent" Height="26" VerticalAlignment="Center" Tag="{Binding .}" Source="/desktopDate;component/resource/image/delete.png" x:Name="btnDelete" Click="btnDelete_Click"/>
 									</StackPanel>
 								</Grid>

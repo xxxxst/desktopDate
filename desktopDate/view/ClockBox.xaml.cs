@@ -6,7 +6,6 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
-using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -22,20 +21,20 @@ using System.Windows.Shapes;
 
 namespace desktopDate.view {
 	/// <summary>
-	/// TimerBox.xaml 的交互逻辑
+	/// ClockBox.xaml 的交互逻辑
 	/// </summary>
-	public partial class TimerBox : UserControl {
-		ObservableCollection<TimerVM> lstTimerVM = new ObservableCollection<TimerVM>();
+	public partial class ClockBox : UserControl {
+		ObservableCollection<ClockVM> lstClockVM = new ObservableCollection<ClockVM>();
 
-		List<TimerModel> arrTimer = null;
-		int nowSecond = 0;
+		List<ClockModel> arrClock = null;
+		//int nowSecond = 0;
 		//bool isStart = false;
 
-		private TimerVM editVM = null;
+		private ClockVM editVM = null;
 		private EditTimeType editType = EditTimeType.Hour;
 		private int oldValue = 0;
 
-		public TimerBox() {
+		public ClockBox() {
 			InitializeComponent();
 
 			if(DesignerProperties.GetIsInDesignMode(this)) {
@@ -45,94 +44,67 @@ namespace desktopDate.view {
 			grdSetting.Visibility = Visibility.Collapsed;
 			txtMusic.Text = MainModel.ins.cfgMd.timerMusicPath;
 
-			arrTimer = MainModel.ins.cfgMd.lstTimer;
-			for(int i = 0; i < arrTimer.Count; ++i) {
-				TimerVM vm = new TimerVM();
+			arrClock = MainModel.ins.cfgMd.lstClock;
+			for(int i = 0; i < arrClock.Count; ++i) {
+				ClockVM vm = new ClockVM();
 				vm.Index = i;
-				vm.md = arrTimer[i];
-				//int totalSecond = TimeFormat.getTotalSecond(arrTimer[i].hour, arrTimer[i].minute, arrTimer[i].second);
+				vm.md = arrClock[i];
 				//vm.Time = formatTime(totalSecond);
-				vm.Hour = arrTimer[i].hour;
-				vm.Minute = arrTimer[i].minute;
-				vm.Second = arrTimer[i].second;
-				lstTimerVM.Add(vm);
+				vm.Hour = arrClock[i].hour;
+				vm.Minute = arrClock[i].minute;
+				lstClockVM.Add(vm);
 			}
 
-			lstTimer.ItemsSource = lstTimerVM;
-
-			TimerServer.ins.onTimerUpdated = (int _nowSecond, int _totalSecond) => {
-				nowSecond = _nowSecond;
-				Dispatcher.Invoke(updateNowTime);
+			lstTimer.ItemsSource = lstClockVM;
+			
+			ClockServer.ins.onPlayMusicStart = () => {
+				Dispatcher.Invoke(updateTimerStatus);
 			};
 
-			TimerServer.ins.onTimerFinished = () => {
-				nowSecond = 0;
-				Dispatcher.Invoke(() => {
-					var win = MainModel.ins.detailWin;
-					if(!win.IsVisible) {
-						win.Show();
-					}
-
-					updateNowTime();
-					updateTimerStatus();
-				});
-			};
-
-			TimerServer.ins.onPlayMusicFinished = () => {
+			ClockServer.ins.onPlayMusicFinished = () => {
 				Dispatcher.Invoke(updateTimerStatus);
 			};
 
 			updateTimerStatus();
-			updateNowTime();
+
+			NowTimeServer.ins.timer.Tick += new EventHandler(timerProc);
 		}
 
-		private void updateNowTime() {
-			lblNowTime.Content = TimeFormat.formatTime(nowSecond);
+		private void timerProc(object sender, EventArgs e) {
+			DateTime date = DateTime.Now;
+			lblNowTime.Content = date.ToString("HH;mm:ss");
 		}
 
 		private void updateTimerStatus() {
-			TimerServer ins = TimerServer.ins;
-			btnStartNow.Visibility = ins.isStart() && ins.isPause ? Visibility.Visible : Visibility.Collapsed;
-			btnPause.Visibility = ins.isStart() && !ins.isPause ? Visibility.Visible : Visibility.Collapsed;
-			btnStop.Visibility = ins.isStart() || ins.isPlay() ? Visibility.Visible : Visibility.Collapsed;
-			btnSetting.Visibility = !ins.isStart() && !ins.isPlay() ? Visibility.Visible : Visibility.Collapsed;
+			ClockServer ins = ClockServer.ins;
+
+			btnStop.Visibility = ins.isPlay() ? Visibility.Visible : Visibility.Collapsed;
+			btnSetting.Visibility = !ins.isPlay() ? Visibility.Visible : Visibility.Collapsed;
 
 			imgIcon.Visibility = !ins.isPlay() ? Visibility.Visible : Visibility.Collapsed;
 			imgIconRotate.Visibility = ins.isPlay() ? Visibility.Visible : Visibility.Collapsed;
 		}
 
-		private void btnStartNow_Click(object sender, RoutedEventArgs e) {
-			TimerServer.ins.start();
-			updateTimerStatus();
-		}
-
-		private void btnPause_Click(object sender, RoutedEventArgs e) {
-			TimerServer.ins.pause();
-			updateTimerStatus();
-		}
-
 		private void btnStop_Click(object sender, RoutedEventArgs e) {
-			TimerServer.ins.stop();
-			nowSecond = 0;
+			ClockServer.ins.stop();
 			updateTimerStatus();
-			updateNowTime();
 		}
 
 		private void btnAdd_Click(object sender, RoutedEventArgs e) {
-			TimerModel md = new TimerModel();
-			TimerVM vm = new TimerVM() {
-				Index = lstTimerVM.Count,
+			ClockModel md = new ClockModel();
+			ClockVM vm = new ClockVM() {
+				Index = lstClockVM.Count,
 				md = md,
 				IsNew = true,
 			};
 
-			foreach(var item in lstTimerVM) {
+			foreach(var item in lstClockVM) {
 				item.IsNew = false;
 			}
 
-			arrTimer.Add(md);
-			lstTimerVM.Add(vm);
-			lstTimer.ScrollIntoView(lstTimerVM.Last());
+			arrClock.Add(md);
+			lstClockVM.Add(vm);
+			lstTimer.ScrollIntoView(lstClockVM.Last());
 		}
 
 		private void btnSetting_Click(object sender, RoutedEventArgs e) {
@@ -141,48 +113,32 @@ namespace desktopDate.view {
 			grdSetting.Visibility = !btnSetting.IsSelect ? Visibility.Collapsed : Visibility.Visible;
 		}
 
-		private void btnStart_Click(object sender, RoutedEventArgs e) {
-			TimerVM vm = (sender as MiniButton).Tag as TimerVM;
-			nowSecond = TimeFormat.getTotalSecond(vm.md.hour, vm.md.minute, vm.md.second);
-			//nowSecond = vm.md.totalSecond;
-
-			TimerServer.ins.restart(vm.md);
-
-			updateNowTime();
-			updateTimerStatus();
-		}
-
 		private void btnDelete_Click(object sender, RoutedEventArgs e) {
-			TimerVM vm = (sender as MiniButton).Tag as TimerVM;
+			ClockVM vm = (sender as MiniButton).Tag as ClockVM;
 
-			arrTimer.RemoveAt(vm.Index);
-			lstTimerVM.RemoveAt(vm.Index);
-			for(int i = vm.Index; i < lstTimerVM.Count; ++i) {
-				lstTimerVM[i].Index = i;
+			arrClock.RemoveAt(vm.Index);
+			lstClockVM.RemoveAt(vm.Index);
+			for(int i = vm.Index; i < lstClockVM.Count; ++i) {
+				lstClockVM[i].Index = i;
 			}
 		}
 
 		private void txtMusic_TextChanged(object sender, TextChangedEventArgs e) {
-			MainModel.ins.cfgMd.timerMusicPath = txtMusic.Text;
+			MainModel.ins.cfgMd.clockMusicPath = txtMusic.Text;
 			//Debug.WriteLine(txtMusic.Text);
 		}
 
 		private void lblHour_Click(object sender, RoutedEventArgs e) {
-			TimerVM vm = (sender as MiniButton).Tag as TimerVM;
+			ClockVM vm = (sender as MiniButton).Tag as ClockVM;
 			initEditMode(vm, EditTimeType.Hour);
 		}
 
 		private void lblMinute_Click(object sender, RoutedEventArgs e) {
-			TimerVM vm = (sender as MiniButton).Tag as TimerVM;
+			ClockVM vm = (sender as MiniButton).Tag as ClockVM;
 			initEditMode(vm, EditTimeType.Minute);
 		}
 
-		private void lblSecond_Click(object sender, RoutedEventArgs e) {
-			TimerVM vm = (sender as MiniButton).Tag as TimerVM;
-			initEditMode(vm, EditTimeType.Second);
-		}
-
-		private void initEditMode(TimerVM vm, EditTimeType type) {
+		private void initEditMode(ClockVM vm, EditTimeType type) {
 			editVM = vm;
 			editVM.IsEdit = true;
 			MainModel.ins.isEditTime = true;
@@ -216,7 +172,7 @@ namespace desktopDate.view {
 			const int gap = gapL + gapR;
 
 			int val = 0;
-			val = (int)((x - gapL) / (w - gap) * (maxVal+1));
+			val = (int)((x - gapL) / (w - gap) * (maxVal + 1));
 			val = Math.Max(val, 0);
 			val = Math.Min(val, maxVal);
 
@@ -236,16 +192,14 @@ namespace desktopDate.view {
 				switch(editType) {
 					case EditTimeType.Hour: editVM.Hour = oldValue; break;
 					case EditTimeType.Minute: editVM.Minute = oldValue; break;
-					case EditTimeType.Second: editVM.Second = oldValue; break;
 				}
 			} else if(e.ChangedButton == MouseButton.Left) {
 				switch(editType) {
 					case EditTimeType.Hour: editVM.md.hour = editVM.Hour; break;
 					case EditTimeType.Minute: editVM.md.minute = editVM.Minute; break;
-					case EditTimeType.Second: editVM.md.second = editVM.Second; break;
 				}
 			}
-			
+
 			editVM.IsEdit = false;
 			editVM = null;
 			MainModel.ins.isEditTime = false;
@@ -254,14 +208,14 @@ namespace desktopDate.view {
 		}
 	}
 
-	public class TimerVM : INotifyPropertyChanged {
+	public class ClockVM : INotifyPropertyChanged {
 		int _Index = 0;
 		public int Index {
 			get { return _Index; }
 			set { _Index = value; updatePro("Index"); }
 		}
 
-		public TimerModel md = null;
+		public ClockModel md = null;
 
 		//string _Time = "00:00:00";
 		//public string Time {
@@ -275,7 +229,7 @@ namespace desktopDate.view {
 			get { return _Hour; }
 			set { _Hour = value; updatePro("StrHour"); }
 		}
-		
+
 		public string StrHour {
 			get { return _Hour.ToString().PadLeft(2, '0'); }
 		}
@@ -297,7 +251,7 @@ namespace desktopDate.view {
 			get { return _Second; }
 			set { _Second = value; updatePro("StrSecond"); }
 		}
-		
+
 		public string StrSecond {
 			get { return _Second.ToString().PadLeft(2, '0'); }
 		}
@@ -337,5 +291,4 @@ namespace desktopDate.view {
 			return new SolidColorBrush((Color)ColorConverter.ConvertFromString(color));
 		}
 	}
-
 }

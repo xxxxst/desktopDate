@@ -1,4 +1,5 @@
-﻿using desktopDate.services;
+﻿using desktopDate.model;
+using desktopDate.services;
 using desktopDate.util;
 using System;
 using System.Collections.Generic;
@@ -86,7 +87,15 @@ namespace desktopDate.view {
 		private void Window_Deactivated(object sender, EventArgs e) {
 			onClose?.Invoke();
 
+			if(ClockServer.ins.isPlay()) {
+				return;
+			}
+
 			if(TimerServer.ins.isPlay()) {
+				return;
+			}
+
+			if(MainModel.ins.isEditTime) {
 				return;
 			}
 
@@ -100,6 +109,7 @@ namespace desktopDate.view {
 			btnTimer.Background = null;
 
 			grdFestival.Visibility = Visibility.Collapsed;
+			grdClock.Visibility = Visibility.Collapsed;
 			grdTimer.Visibility = Visibility.Collapsed;
 
 			btnFestival.Background = selectButtonBackground;
@@ -107,7 +117,16 @@ namespace desktopDate.view {
 		}
 
 		private void btnClock_Click(object sender, RoutedEventArgs e) {
+			btnFestival.Background = null;
+			btnClock.Background = null;
+			btnTimer.Background = null;
 
+			grdFestival.Visibility = Visibility.Collapsed;
+			grdClock.Visibility = Visibility.Collapsed;
+			grdTimer.Visibility = Visibility.Collapsed;
+
+			btnClock.Background = selectButtonBackground;
+			grdClock.Visibility = Visibility.Visible;
 		}
 
 		private void btnTimer_Click(object sender, RoutedEventArgs e) {
@@ -116,6 +135,7 @@ namespace desktopDate.view {
 			btnTimer.Background = null;
 
 			grdFestival.Visibility = Visibility.Collapsed;
+			grdClock.Visibility = Visibility.Collapsed;
 			grdTimer.Visibility = Visibility.Collapsed;
 
 			btnTimer.Background = selectButtonBackground;

@@ -14,6 +14,8 @@ namespace desktopDate.model {
 		public MainWindow mainWIn = null;
 
 		public ConfigModel cfgMd = null;
+
+		public bool isEditTime = false;
 	}
 	
 	[XmlRoot("desktopDate")]
@@ -30,15 +32,25 @@ namespace desktopDate.model {
 	}
 
 	public class TimerModel {
-		[XmlAttr("totalSecond")] public int totalSecond = 0;
-		//[XmlAttr("desc")] public string desc = "";
-	}
-
-	public class ClockModel {
+		//[XmlAttr("totalSecond")] public int totalSecond = 0;
 		[XmlAttr("time")] public string time = "00:00:00";
+		//public int totalSecond = 0;
 
 		public int hour = 0;
 		public int minute = 0;
 		public int second = 0;
+		//[XmlAttr("desc")] public string desc = "";
 	}
+
+	public class ClockModel {
+		[XmlAttr("time")] public string time = "00:00";
+		[XmlAttr("isEnable")] public bool isEnable = true;
+
+		public int hour = 0;
+		public int minute = 0;
+		//public int second = 0;
+	}
+
+	enum EditTimeType { Hour, Minute, Second }
+
 }

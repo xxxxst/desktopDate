@@ -20,8 +20,8 @@
 					<Grid.ColumnDefinitions>
 						<ColumnDefinition Width="*"/>
 						<ColumnDefinition Width="1"/>
-						<ColumnDefinition Width="0"/>
-						<ColumnDefinition Width="0"/>
+						<ColumnDefinition Width="*"/>
+						<ColumnDefinition Width="1"/>
 						<ColumnDefinition Width="*"/>
 						<ColumnDefinition Width="1"/>
 						<ColumnDefinition Width="25"/>
@@ -70,6 +70,7 @@
 				</ListBox>
 			</Grid>
 
+			<local:ClockBox Grid.Row="2" Visibility="Collapsed" x:Name="grdClock"/>
 			<local:TimerBox Grid.Row="2" Visibility="Collapsed" x:Name="grdTimer"/>
 		</Grid>
 	</Grid>

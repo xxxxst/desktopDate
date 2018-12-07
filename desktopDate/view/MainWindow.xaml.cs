@@ -44,6 +44,7 @@ namespace desktopDate.view {
 		//XmlCtl xmlCfg = null;
 		DetailWin detailWin = null;
 		XmlModelServer xmlCfgServer = null;
+		ConfigCtl cfgCtl = new ConfigCtl();
 
 		public MainWindow() {
 			InitializeComponent();
@@ -57,7 +58,7 @@ namespace desktopDate.view {
 			xmlCfgServer = new XmlModelServer(MainModel.ins.cfgMd, "config.xml");
 			try{
 				xmlCfgServer.loadFromXml();
-				ConfigModel md = MainModel.ins.cfgMd;
+				//ConfigModel md = MainModel.ins.cfgMd;
 				
 				//for(int i = 0; i < md.lstBox.Count; ++i) {
 				//	Debug.WriteLine("11:" + md.lstBox[i].timer);
@@ -65,6 +66,7 @@ namespace desktopDate.view {
 			} catch(Exception ex) {
 				Debug.WriteLine(ex.ToString());
 			}
+			cfgCtl.load();
 
 			//ignoreMouseEvent();
 			setPos();
@@ -77,7 +79,9 @@ namespace desktopDate.view {
 		private void Window_Loaded(object sender, RoutedEventArgs e) {
 			appendToWindow();
 			
+			NowTimeServer.ins.init();
 			FestivalServer.ins.init();
+			ClockServer.ins.init();
 			TimerServer.ins.init();
 
 			updateDate();
@@ -87,10 +91,11 @@ namespace desktopDate.view {
 			//keyCtl.checkKey = checkKey;
 			//keyCtl.init();
 
-			DispatcherTimer readDataTimer = new DispatcherTimer();
-			readDataTimer.Tick += new EventHandler(timerProc);
-			readDataTimer.Interval = new TimeSpan(0, 0, 0, 1);
-			readDataTimer.Start();
+			//timer = new DispatcherTimer();
+			//timer.Tick += new EventHandler(timerProc);
+			//timer.Interval = new TimeSpan(0, 0, 0, 1);
+			//timer.Start();
+			NowTimeServer.ins.timer.Tick += new EventHandler(timerProc);
 		}
 
 		private void initKeys() {
@@ -397,13 +402,16 @@ namespace desktopDate.view {
 
 		private void Window_Closed(object sender, EventArgs e) {
 			try {
-				TimerServer.ins.stop();
+				NowTimeServer.ins.clear();
+				TimerServer.ins.clear();
+				ClockServer.ins.clear();
 
 				if(detailWin != null) {
 					detailWin.Close();
 					detailWin = null;
 				}
 
+				cfgCtl.save();
 				xmlCfgServer.save();
 				//xmlCfg.save();
 			} catch(Exception ex) {

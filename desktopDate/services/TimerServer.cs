@@ -1,5 +1,6 @@
 ﻿using desktopDate.control;
 using desktopDate.model;
+using desktopDate.util;
 using desktopDate.view;
 using System;
 using System.Collections.Generic;
@@ -46,7 +47,9 @@ namespace desktopDate.services {
 		public void restart(TimerModel _startTimer) {
 			stop();
 
-			if(_startTimer.totalSecond <= 0) {
+			totalSecond = TimeFormat.getTotalSecond(_startTimer.hour, _startTimer.minute, _startTimer.second);
+
+			if(totalSecond <= 0) {
 				onTimerFinished?.Invoke();
 				return;
 			}
@@ -56,7 +59,6 @@ namespace desktopDate.services {
 			//isPlay = false;
 
 			parseNS = 0;
-			totalSecond = startTimer.totalSecond;
 			nowSecond = totalSecond;
 			startTime = DateTime.Now.ToFileTimeUtc();
 
@@ -155,6 +157,10 @@ namespace desktopDate.services {
 			} catch(Exception ex) {
 				Debug.WriteLine(ex.ToString());
 			}
+		}
+
+		public void clear() {
+			stop();
 		}
 	}
 }

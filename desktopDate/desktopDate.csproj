@@ -113,6 +113,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="control\ConfigCtl.cs" />
     <Compile Include="control\MusicPlayer.cs" />
     <Compile Include="control\SetTimeout.cs" />
     <Compile Include="model\MainModel.cs" />
@@ -165,10 +166,16 @@
     <Compile Include="sdk\fmod\fmod.cs" />
     <Compile Include="sdk\fmod\fmod_dsp.cs" />
     <Compile Include="sdk\fmod\fmod_errors.cs" />
+    <Compile Include="services\ClockServer.cs" />
+    <Compile Include="services\NowTimeServer.cs" />
     <Compile Include="services\TimerServer.cs" />
     <Compile Include="sdk\csharpHelp\services\XmlModelServer.cs" />
+    <Compile Include="util\TimeFormat.cs" />
     <Compile Include="view\AboutWin.xaml.cs">
       <DependentUpon>AboutWin.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="view\ClockBox.xaml.cs">
+      <DependentUpon>ClockBox.xaml</DependentUpon>
     </Compile>
     <Compile Include="view\TimerBox.xaml.cs">
       <DependentUpon>TimerBox.xaml</DependentUpon>
@@ -217,6 +224,10 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="view\AboutWin.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="view\ClockBox.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -352,8 +363,8 @@
     <PropertyGroup>
       <ErrorText>这台计算机上缺少此项目引用的 NuGet 程序包。使用“NuGet 程序包还原”可下载这些程序包。有关更多信息，请参见 http://go.microsoft.com/fwlink/?LinkID=322105。缺少的文件是 {0}。</ErrorText>
     </PropertyGroup>
-    <Error Condition="!Exists('..\packages\Costura.Fody.3.2.0\build\Costura.Fody.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Costura.Fody.3.2.0\build\Costura.Fody.props'))" />
     <Error Condition="!Exists('..\packages\Fody.3.3.2\build\Fody.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Fody.3.3.2\build\Fody.targets'))" />
+    <Error Condition="!Exists('..\packages\Costura.Fody.3.2.0\build\Costura.Fody.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Costura.Fody.3.2.0\build\Costura.Fody.props'))" />
   </Target>
   <Import Project="..\packages\Fody.3.3.2\build\Fody.targets" Condition="Exists('..\packages\Fody.3.3.2\build\Fody.targets')" />
   <PropertyGroup>
