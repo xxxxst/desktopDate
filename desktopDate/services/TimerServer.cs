@@ -150,7 +150,7 @@ namespace desktopDate.services {
 				if(waitTime <= 0 || waitTime > 3600) {
 					waitTime = 30;
 				}
-
+				
 				waitAlarm = new SetTimeout(() => {
 					stop();
 				}, waitTime * 1000);

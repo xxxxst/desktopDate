@@ -7,6 +7,7 @@
         mc:Ignorable="d"
         Title="关于" Height="450" Width="800" WindowStartupLocation="CenterScreen" WindowStyle="None" ResizeMode="NoResize" Background="#4d4d4d" ShowInTaskbar="False" Loaded="Window_Loaded" MouseUp="Window_MouseUp" Deactivated="Window_Deactivated">
     <Grid>
+		<Border BorderThickness="2" BorderBrush="#414141"/>
 
 		<Grid Margin="8">
 			<Grid.ColumnDefinitions>
@@ -29,6 +30,8 @@
 					<Label HorizontalAlignment="Left" Foreground="#fff" Content="fmod -"/>
 					<Label HorizontalAlignment="Left" Foreground="#f1a1ee" Cursor="Hand" Content="https://www.fmod.com/" Name="lblFmodUrl" MouseUp="lblUrlJump_MouseUp"/>
 				</StackPanel>
+				<Label HorizontalAlignment="Left" Foreground="#fff" Padding="5,2" Margin="0,20,0,0" Content="设置时间："/>
+				<Label HorizontalAlignment="Left" Foreground="#fff" Padding="5,2" Content="点击时/分/秒，滑动鼠标设置。鼠标右键取消，鼠标左键确定"/>
 			</StackPanel>
 		</Grid>
 	</Grid>

@@ -50,27 +50,55 @@
 					<DataTemplate>
 						<Border BorderThickness="0,0,0,1" BorderBrush="#fff" Background="Transparent" Name="grdBox">
 							<Grid Background="Transparent">
-								<Grid Margin="5,0,0,0" Height="35">
+								<Grid Margin="2,0,0,0" Height="35" Background="Transparent">
 									<Grid.ColumnDefinitions>
 										<ColumnDefinition Width="*"/>
 										<ColumnDefinition Width="Auto"/>
 									</Grid.ColumnDefinitions>
 									<StackPanel Grid.Column="0" HorizontalAlignment="Left" Orientation="Horizontal">
+										<Border Margin="0,4,5,4" Width="2">
+											<Border.Style>
+												<Style TargetType="Border">
+													<Setter Property="Visibility" Value="Hidden"/>
+													<Setter Property="Background" Value="#9d9d9d"/>
+													<Style.Triggers>
+														<DataTrigger Binding="{Binding IsMouseOver, RelativeSource={RelativeSource AncestorType=Grid}}" Value="True">
+															<Setter Property="Visibility" Value="Visible"/>
+														</DataTrigger>
+														<DataTrigger Binding="{Binding IsSelect}" Value="True">
+															<Setter Property="Visibility" Value="Visible"/>
+															<Setter Property="Background" Value="#fff"/>
+														</DataTrigger>
+													</Style.Triggers>
+												</Style>
+											</Border.Style>
+										</Border>
 
 										<supUI:MiniButton Padding="0" VerticalAlignment="Center" FontSize="16" Foreground="#f1a1ee" Background="Transparent" OverColor="Transparent" Cursor="Hand" Tag="{Binding .}" Content="{Binding StrHour}" x:Name="lblHour" Click="lblHour_Click"/>
 										<Label Padding="0" VerticalAlignment="Center" FontSize="16" Foreground="#f1a1ee" Background="Transparent" Content=":"/>
 										<supUI:MiniButton Padding="0" VerticalAlignment="Center" FontSize="16" Foreground="#f1a1ee" Background="Transparent" OverColor="Transparent" Cursor="Hand" Tag="{Binding .}" Content="{Binding StrMinute}" x:Name="lblMinute" Click="lblMinute_Click"/>
 										<Label Padding="0" VerticalAlignment="Center" FontSize="16" Foreground="#f1a1ee" Background="Transparent" Content=":"/>
 										<supUI:MiniButton Padding="0" VerticalAlignment="Center" FontSize="16" Foreground="#f1a1ee" Background="Transparent" OverColor="Transparent" Cursor="Hand" Tag="{Binding .}" Content="{Binding StrSecond}" x:Name="lblSecond" Click="lblSecond_Click"/>
-										<Border Margin="8,0,0,0" VerticalAlignment="Center" BorderThickness="1" BorderBrush="#56ec5d" CornerRadius="6" Visibility="{Binding IsNewVisibility}">
+
+										<Label Grid.Column="2" Margin="4,2,0,0" Padding="3,0,3,3" VerticalAlignment="Top" FontSize="11" Foreground="#56ec5d" Content="new" Visibility="{Binding IsNewVisibility}"/>
+										<!--<Border Margin="8,0,0,0" VerticalAlignment="Center" BorderThickness="1" BorderBrush="#56ec5d" CornerRadius="6" Visibility="{Binding IsNewVisibility}">
 											<Label Padding="3,0,3,3" Margin="0" VerticalAlignment="Center" FontSize="11" Foreground="#56ec5d" Content="new"/>
-										</Border>
+										</Border>-->
 									</StackPanel>
 
 									<StackPanel Grid.Column="1" HorizontalAlignment="Right" Orientation="Horizontal" Visibility="{Binding IsNotEditVisibility}">
 										<supUI:MiniButton ImagePadding="6" Background="Transparent" Height="26" VerticalAlignment="Center" Tag="{Binding .}" Source="/desktopDate;component/resource/image/start.png" x:Name="btnStart" Click="btnStart_Click"/>
 										<supUI:MiniButton ImagePadding="6" Background="Transparent" Height="26" VerticalAlignment="Center" Tag="{Binding .}" Source="/desktopDate;component/resource/image/delete.png" x:Name="btnDelete" Click="btnDelete_Click"/>
 									</StackPanel>
+									<!--<Grid.Style>
+										<Style TargetType="Grid">
+											<Style.Triggers>
+												<Trigger Property="IsMouseOver" Value="True">
+													<Setter Property="Visibility" TargetName="bdSelect" Value="Visible"/>
+												</Trigger>
+											</Style.Triggers>
+										</Style>
+									</Grid.Style>-->
 								</Grid>
 
 								<Grid Visibility="{Binding IsEditVisibility}" Name="grdTimeEditMask" MouseMove="grdTimeEditMask_MouseMove" MouseUp="grdTimeEditMask_MouseUp">
@@ -102,7 +130,15 @@
 
 		<Grid Grid.Row="2" Name="grdSetting">
 			<StackPanel>
-				<supUI:TextBoxFile Height="30" IsShowFullPath="False" IsDisableInput="True" Content="铃声" x:Name="txtMusic" TextChanged="txtMusic_TextChanged"/>
+				<Grid Height="30">
+					<Grid.ColumnDefinitions>
+						<ColumnDefinition Width="*"/>
+						<ColumnDefinition Width="Auto"/>
+					</Grid.ColumnDefinitions>
+					
+					<supUI:TextBoxFile IsShowFullPath="False" IsDisableInput="True" Content="铃声" x:Name="txtMusic" TextChanged="txtMusic_TextChanged"/>
+					<supUI:MiniButton Grid.Column="1" Margin="4,0" ImagePadding="6" Background="Transparent" Height="26" VerticalAlignment="Bottom" Radius="5" Source="/desktopDate;component/resource/image/delete.png" x:Name="btnClearMusic" Click="btnClearMusic_Click"/>
+				</Grid>
 			</StackPanel>
 		</Grid>
 

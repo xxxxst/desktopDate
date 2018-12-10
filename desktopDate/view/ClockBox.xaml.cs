@@ -2,10 +2,12 @@
 using desktopDate.model;
 using desktopDate.services;
 using desktopDate.util;
+using desktopDate.view.util;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -49,6 +51,8 @@ namespace desktopDate.view {
 				ClockVM vm = new ClockVM();
 				vm.Index = i;
 				vm.md = arrClock[i];
+				vm.Desc = arrClock[i].desc;
+				vm.IsEnable = arrClock[i].isEnable;
 				//vm.Time = formatTime(totalSecond);
 				vm.Hour = arrClock[i].hour;
 				vm.Minute = arrClock[i].minute;
@@ -58,7 +62,12 @@ namespace desktopDate.view {
 			lstTimer.ItemsSource = lstClockVM;
 			
 			ClockServer.ins.onPlayMusicStart = () => {
-				Dispatcher.Invoke(updateTimerStatus);
+				Dispatcher.Invoke(() => {
+					var win = MainModel.ins.detailWin;
+					win.show(DetailWinViewBox.Clock);
+
+					updateTimerStatus();
+				});
 			};
 
 			ClockServer.ins.onPlayMusicFinished = () => {
@@ -105,6 +114,8 @@ namespace desktopDate.view {
 			arrClock.Add(md);
 			lstClockVM.Add(vm);
 			lstTimer.ScrollIntoView(lstClockVM.Last());
+
+			AutoSaveServer.ins.hasChanged = true;
 		}
 
 		private void btnSetting_Click(object sender, RoutedEventArgs e) {
@@ -121,11 +132,15 @@ namespace desktopDate.view {
 			for(int i = vm.Index; i < lstClockVM.Count; ++i) {
 				lstClockVM[i].Index = i;
 			}
+
+			AutoSaveServer.ins.hasChanged = true;
 		}
 
 		private void txtMusic_TextChanged(object sender, TextChangedEventArgs e) {
 			MainModel.ins.cfgMd.clockMusicPath = txtMusic.Text;
 			//Debug.WriteLine(txtMusic.Text);
+
+			AutoSaveServer.ins.hasChanged = true;
 		}
 
 		private void lblHour_Click(object sender, RoutedEventArgs e) {
@@ -136,6 +151,28 @@ namespace desktopDate.view {
 		private void lblMinute_Click(object sender, RoutedEventArgs e) {
 			ClockVM vm = (sender as MiniButton).Tag as ClockVM;
 			initEditMode(vm, EditTimeType.Minute);
+		}
+
+		private void txtDesc_TextChanged(object sender, TextChangedEventArgs e) {
+			ClockVM vm = (sender as TextBox).Tag as ClockVM;
+			vm.md.desc = vm.Desc;
+			vm.IsNew = false;
+
+			AutoSaveServer.ins.hasChanged = true;
+		}
+
+		private void chekEnable_Checked(object sender, RoutedEventArgs e) {
+			ClockVM vm = (sender as RoundCheckBox).Tag as ClockVM;
+			vm.md.isEnable = (vm.IsEnable == true);
+
+			AutoSaveServer.ins.hasChanged = true;
+		}
+
+		private void chekEnable_Unchecked(object sender, RoutedEventArgs e) {
+			ClockVM vm = (sender as RoundCheckBox).Tag as ClockVM;
+			vm.md.isEnable = (vm.IsEnable == true);
+
+			AutoSaveServer.ins.hasChanged = true;
 		}
 
 		private void initEditMode(ClockVM vm, EditTimeType type) {
@@ -198,6 +235,8 @@ namespace desktopDate.view {
 					case EditTimeType.Hour: editVM.md.hour = editVM.Hour; break;
 					case EditTimeType.Minute: editVM.md.minute = editVM.Minute; break;
 				}
+
+				AutoSaveServer.ins.hasChanged = true;
 			}
 
 			editVM.IsEdit = false;
@@ -206,6 +245,11 @@ namespace desktopDate.view {
 
 			return;
 		}
+
+		private void btnClearMusic_Click(object sender, RoutedEventArgs e) {
+			txtMusic.Text = "";
+		}
+
 	}
 
 	public class ClockVM : INotifyPropertyChanged {
@@ -217,11 +261,19 @@ namespace desktopDate.view {
 
 		public ClockModel md = null;
 
-		//string _Time = "00:00:00";
-		//public string Time {
-		//	get { return _Time; }
-		//	set { _Time = value; updatePro("Time"); }
-		//}
+		//desc
+		string _Desc = "";
+		public string Desc {
+			get { return _Desc; }
+			set { _Desc = value; updatePro("Desc"); }
+		}
+
+		//Is Enable
+		bool? _IsEnable = true;
+		public bool? IsEnable {
+			get { return _IsEnable; }
+			set { _IsEnable = value; updatePro("IsEnable"); }
+		}
 
 		//hour
 		int _Hour = 0;

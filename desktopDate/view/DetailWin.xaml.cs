@@ -1,4 +1,5 @@
-﻿using desktopDate.model;
+﻿using csharpHelp.util;
+using desktopDate.model;
 using desktopDate.services;
 using desktopDate.util;
 using System;
@@ -41,7 +42,7 @@ namespace desktopDate.view {
 
 				FestivalVM vm = new FestivalVM();
 				vm.Name = md.name;
-				vm.Time = md.time;
+				vm.Time = md.showTime;
 				int day = md.dayOfRange;
 				//if(day < 0) {
 				//	//vm.DayOfRange = "结束";
@@ -103,7 +104,22 @@ namespace desktopDate.view {
 			Hide();
 		}
 
-		private void btnFestival_Click(object sender, RoutedEventArgs e) {
+		public void show(DetailWinViewBox type) {
+			if(!IsVisible) {
+				Show();
+			}
+
+			//const int HWND_TOP = 0;
+			//const int HWND_TOPMOST = -1;
+			//const int SWP_NOSIZE = 1;
+			//const int SWP_NOMOVE = 2;
+			//const int SWP_NOZORDER = 4;
+			//IntPtr Handle = new WindowInteropHelper(this).Handle;
+			//User32.SetWindowPos(Handle, new IntPtr(HWND_TOPMOST), 0, 0, 0, 0, SWP_NOSIZE | SWP_NOMOVE);
+			switchViewBox(type);
+		}
+
+		public void switchViewBox(DetailWinViewBox type) {
 			btnFestival.Background = null;
 			btnClock.Background = null;
 			btnTimer.Background = null;
@@ -112,34 +128,35 @@ namespace desktopDate.view {
 			grdClock.Visibility = Visibility.Collapsed;
 			grdTimer.Visibility = Visibility.Collapsed;
 
-			btnFestival.Background = selectButtonBackground;
-			grdFestival.Visibility = Visibility.Visible;
+			switch(type) {
+				case DetailWinViewBox.Festival: {
+					btnFestival.Background = selectButtonBackground;
+					grdFestival.Visibility = Visibility.Visible;
+					break;
+				}
+				case DetailWinViewBox.Clock: {
+					btnClock.Background = selectButtonBackground;
+					grdClock.Visibility = Visibility.Visible;
+					break;
+				}
+				case DetailWinViewBox.Timer: {
+					btnTimer.Background = selectButtonBackground;
+					grdTimer.Visibility = Visibility.Visible;
+					break;
+				}
+			}
+		}
+
+		private void btnFestival_Click(object sender, RoutedEventArgs e) {
+			switchViewBox(DetailWinViewBox.Festival);
 		}
 
 		private void btnClock_Click(object sender, RoutedEventArgs e) {
-			btnFestival.Background = null;
-			btnClock.Background = null;
-			btnTimer.Background = null;
-
-			grdFestival.Visibility = Visibility.Collapsed;
-			grdClock.Visibility = Visibility.Collapsed;
-			grdTimer.Visibility = Visibility.Collapsed;
-
-			btnClock.Background = selectButtonBackground;
-			grdClock.Visibility = Visibility.Visible;
+			switchViewBox(DetailWinViewBox.Clock);
 		}
 
 		private void btnTimer_Click(object sender, RoutedEventArgs e) {
-			btnFestival.Background = null;
-			btnClock.Background = null;
-			btnTimer.Background = null;
-
-			grdFestival.Visibility = Visibility.Collapsed;
-			grdClock.Visibility = Visibility.Collapsed;
-			grdTimer.Visibility = Visibility.Collapsed;
-
-			btnTimer.Background = selectButtonBackground;
-			grdTimer.Visibility = Visibility.Visible;
+			switchViewBox(DetailWinViewBox.Timer);
 		}
 
 		private void btnAbout_Click(object sender, RoutedEventArgs e) {
@@ -194,6 +211,10 @@ namespace desktopDate.view {
 
 	public enum DayOfRangeType {
 		Finish, Now, Wait
+	}
+
+	public enum DetailWinViewBox {
+		Festival, Clock, Timer
 	}
 
 }

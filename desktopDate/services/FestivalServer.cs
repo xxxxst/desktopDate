@@ -120,10 +120,12 @@ namespace desktopDate.services {
 			return "";
 		}
 
-		private string getNextWeekFestivalTime(DateTime date, int month, int weekCount, int festivalWeek) {
+		private string getNextWeekFestivalTime(DateTime date, int month, int weekCount, int festivalWeek, out int year) {
 			int day = 0;
+			year = date.Year;
 			calcWeekFestival(date.Year, month, weekCount, festivalWeek, out day);
 			if(date.Month > month || (date.Month == month && date.Day > day)) {
+				++year;
 				calcWeekFestival(date.Year + 1, month, weekCount, festivalWeek, out day);
 			}
 			return month.ToString().PadLeft(2, '0') + "/" + day.ToString().PadLeft(2, '0');
@@ -138,37 +140,61 @@ namespace desktopDate.services {
 			DateTime date = DateTime.Now;
 			date = new DateTime(date.Year, date.Month, date.Day);
 			foreach (string key in mapFestival.Keys) {
-				lstFestival.Add(new FestivalModel(mapFestival[key], key, -1));
+				lstFestival.Add(new FestivalModel(mapFestival[key], date.Year + "/" + key, key, -1));
 			}
 			foreach(string key in mapChineseFestival.Keys) {
-				lstFestival.Add(new FestivalModel(mapChineseFestival[key], key, -1));
+				string[] arr = key.Split('/');
+				if(arr.Length < 2) {
+					continue;
+				}
+				Int32.TryParse(arr[0], out int month);
+				Int32.TryParse(arr[1], out int day);
+				DateTime dtTemp = ChineseDateServer.ins.toDateTime(date.Year, month, day);
+				string strTime1 = dtTemp.ToString("yyyy/MM/dd");
+				string strTime2 = dtTemp.ToString("MM/dd");
+				lstFestival.Add(new FestivalModel(mapChineseFestival[key], strTime1, strTime2, -1) { originTime = key, isChinseeTime = true });
 			}
 
 			string time = "";
-			time = getNextWeekFestivalTime(date, 11, 4, 4);
-			lstFestival.Add(new FestivalModel("感恩节", time, -1));
+			int yearWeek = 0;
+			time = getNextWeekFestivalTime(date, 11, 4, 4, out yearWeek);
+			lstFestival.Add(new FestivalModel("感恩节", yearWeek + "/" + time, time, -1));
 
-			time = getNextWeekFestivalTime(date, 5, 2, 7);
-			lstFestival.Add(new FestivalModel("母亲节", time, -1));
+			time = getNextWeekFestivalTime(date, 5, 2, 7, out yearWeek);
+			lstFestival.Add(new FestivalModel("母亲节", yearWeek + "/" + time, time, -1));
 
-			time = getNextWeekFestivalTime(date, 6, 3, 7);
-			lstFestival.Add(new FestivalModel("父亲节", time, -1));
+			time = getNextWeekFestivalTime(date, 6, 3, 7, out yearWeek);
+			lstFestival.Add(new FestivalModel("父亲节", yearWeek + "/" + time, time, -1));
 
 			lstFestival.Sort((a,b) =>  a.time.CompareTo(b.time));
 
 			for(int i = 0; i < lstFestival.Count; ++i) {
 				try {
 					string[] arr = lstFestival[i].time.Split('/');
-					int month = Convert.ToInt32(arr[0]);
-					int day = Convert.ToInt32(arr[1]);
+					int year = Convert.ToInt32(arr[0]);
+					int month = Convert.ToInt32(arr[1]);
+					int day = Convert.ToInt32(arr[2]);
 
-					DateTime temp = new DateTime(date.Year, month, day);
+					DateTime temp = new DateTime(year, month, day);
 					TimeSpan ts = temp - date;
 					lstFestival[i].dayOfRange = ts.Days;
-					lstFestival[i].isFinished = ts.Days < 0;
+					lstFestival[i].isFinished = year > date.Year || ts.Days < 0;
 
 					if(ts.Days < 0) {
-						temp = new DateTime(date.Year + 1, month, day);
+						if(lstFestival[i].isChinseeTime) {
+							//chinese festival
+							string[] arr1 = lstFestival[i].originTime.Split('/');
+							Int32.TryParse(arr1[0], out int month1);
+							Int32.TryParse(arr1[1], out int day1);
+
+							temp = ChineseDateServer.ins.toDateTime(date.Year + 1, month1, day1);
+							lstFestival[i].time = temp.ToString("yyyy/MM/dd");
+							lstFestival[i].showTime = temp.ToString("MM/dd");
+						} else {
+							//normal festival
+							temp = new DateTime(date.Year + 1, month, day);
+							lstFestival[i].time = temp.ToString("yyyy/MM/dd");
+						}
 						ts = temp - date;
 						lstFestival[i].dayOfRange = ts.Days;
 					}
@@ -201,14 +227,18 @@ namespace desktopDate.services {
 	public class FestivalModel {
 		public string name = "";
 		public string time = "";
+		public string originTime = "";
+		public string showTime = "";
 		public int dayOfRange = -1;
 		public bool isFinished = false;
+		public bool isChinseeTime = false;
 
 		public FestivalModel() { }
 
-		public FestivalModel(string _name, string _time, int _dayOfRange) {
+		public FestivalModel(string _name, string _time, string _showTime, int _dayOfRange) {
 			name = _name;
 			time = _time;
+			showTime = _showTime;
 			dayOfRange = _dayOfRange;
 		}
 	}

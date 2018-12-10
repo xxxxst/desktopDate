@@ -45,6 +45,7 @@ namespace desktopDate.model {
 	public class ClockModel {
 		[XmlAttr("time")] public string time = "00:00";
 		[XmlAttr("isEnable")] public bool isEnable = true;
+		[XmlAttr("desc")] public string desc = "";
 
 		public int hour = 0;
 		public int minute = 0;

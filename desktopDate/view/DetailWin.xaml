@@ -6,8 +6,10 @@
         xmlns:local="clr-namespace:desktopDate.view"
 		xmlns:supUI="clr-namespace:csharpHelp.ui"
         mc:Ignorable="d"
-        Title="DetailWin" Height="330" Width="260" WindowStyle="None" ResizeMode="NoResize" Background="#4d4d4d" ShowInTaskbar="False" Loaded="Window_Loaded" Deactivated="Window_Deactivated">
+        Title="DetailWin" Height="330" Width="260" WindowStyle="None" Topmost="True" ResizeMode="NoResize" Background="#4d4d4d" ShowInTaskbar="False" Loaded="Window_Loaded" Deactivated="Window_Deactivated">
 	<Grid>
+		<Border BorderThickness="2" BorderBrush="#414141"/>
+
 		<Grid Margin="8">
 			<Grid.RowDefinitions>
 				<RowDefinition Height="30"/>

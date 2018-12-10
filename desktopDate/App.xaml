@@ -19,6 +19,9 @@
 				<ResourceDictionary Source="view/style/ComScrollViewStyle.xaml"/>
 				<ResourceDictionary Source="view/style/ComStyle.xaml"/>
 				<ResourceDictionary Source="view/style/Test.xaml"/>
+
+				<ResourceDictionary Source="view/util/RoundCheckBox/RoundCheckBox.xaml"/>
+				<ResourceDictionary Source="view/util/MusicSlider/MusicSlider.xaml"/>
 			</ResourceDictionary.MergedDictionaries>
 		</ResourceDictionary>
 

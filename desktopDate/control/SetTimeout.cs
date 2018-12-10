@@ -21,6 +21,7 @@ namespace desktopDate.control {
 				Thread.Sleep(ms);
 				fun();
 			}, cts.Token);
+			task.Start();
 		}
 
 		public void stop() {

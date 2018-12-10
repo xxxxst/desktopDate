@@ -34,6 +34,7 @@ namespace desktopDate.view {
 		private TimerVM editVM = null;
 		private EditTimeType editType = EditTimeType.Hour;
 		private int oldValue = 0;
+		private TimerVM selectVM = null;
 
 		public TimerBox() {
 			InitializeComponent();
@@ -69,9 +70,7 @@ namespace desktopDate.view {
 				nowSecond = 0;
 				Dispatcher.Invoke(() => {
 					var win = MainModel.ins.detailWin;
-					if(!win.IsVisible) {
-						win.Show();
-					}
+					win.show(DetailWinViewBox.Timer);
 
 					updateNowTime();
 					updateTimerStatus();
@@ -79,7 +78,13 @@ namespace desktopDate.view {
 			};
 
 			TimerServer.ins.onPlayMusicFinished = () => {
-				Dispatcher.Invoke(updateTimerStatus);
+				Dispatcher.Invoke(() => {
+					if(selectVM != null) {
+						selectVM.IsSelect = false;
+						selectVM = null;
+					}
+					updateTimerStatus();
+				});
 			};
 
 			updateTimerStatus();
@@ -112,6 +117,11 @@ namespace desktopDate.view {
 		}
 
 		private void btnStop_Click(object sender, RoutedEventArgs e) {
+			if(selectVM != null) {
+				selectVM.IsSelect = false;
+				selectVM = null;
+			}
+
 			TimerServer.ins.stop();
 			nowSecond = 0;
 			updateTimerStatus();
@@ -133,6 +143,8 @@ namespace desktopDate.view {
 			arrTimer.Add(md);
 			lstTimerVM.Add(vm);
 			lstTimer.ScrollIntoView(lstTimerVM.Last());
+
+			AutoSaveServer.ins.hasChanged = true;
 		}
 
 		private void btnSetting_Click(object sender, RoutedEventArgs e) {
@@ -145,6 +157,12 @@ namespace desktopDate.view {
 			TimerVM vm = (sender as MiniButton).Tag as TimerVM;
 			nowSecond = TimeFormat.getTotalSecond(vm.md.hour, vm.md.minute, vm.md.second);
 			//nowSecond = vm.md.totalSecond;
+
+			if(selectVM != null) {
+				selectVM.IsSelect = false;
+			}
+			selectVM = vm;
+			selectVM.IsSelect = true;
 
 			TimerServer.ins.restart(vm.md);
 
@@ -160,11 +178,15 @@ namespace desktopDate.view {
 			for(int i = vm.Index; i < lstTimerVM.Count; ++i) {
 				lstTimerVM[i].Index = i;
 			}
+
+			AutoSaveServer.ins.hasChanged = true;
 		}
 
 		private void txtMusic_TextChanged(object sender, TextChangedEventArgs e) {
 			MainModel.ins.cfgMd.timerMusicPath = txtMusic.Text;
 			//Debug.WriteLine(txtMusic.Text);
+
+			AutoSaveServer.ins.hasChanged = true;
 		}
 
 		private void lblHour_Click(object sender, RoutedEventArgs e) {
@@ -244,6 +266,8 @@ namespace desktopDate.view {
 					case EditTimeType.Minute: editVM.md.minute = editVM.Minute; break;
 					case EditTimeType.Second: editVM.md.second = editVM.Second; break;
 				}
+
+				AutoSaveServer.ins.hasChanged = true;
 			}
 			
 			editVM.IsEdit = false;
@@ -251,6 +275,10 @@ namespace desktopDate.view {
 			MainModel.ins.isEditTime = false;
 
 			return;
+		}
+
+		private void btnClearMusic_Click(object sender, RoutedEventArgs e) {
+			txtMusic.Text = "";
 		}
 	}
 
@@ -326,6 +354,13 @@ namespace desktopDate.view {
 
 		public Visibility IsNotEditVisibility {
 			get { return !_IsEdit ? Visibility.Visible : Visibility.Collapsed; }
+		}
+
+		//Is Select
+		bool _IsSelect = false;
+		public bool IsSelect {
+			get { return _IsSelect; }
+			set { _IsSelect = value; updatePro("IsSelect"); }
 		}
 
 		//

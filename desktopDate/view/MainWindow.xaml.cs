@@ -38,13 +38,15 @@ namespace desktopDate.view {
 		//public Dictionary<Key, string> mapIgnoreKey = new Dictionary<Key, string>();
 		uint keyCode = 0;
 		KeyboardCtl keyCtl = new KeyboardCtl();
-		ChineseLunisolarCalendar ChineseCalendar = new ChineseLunisolarCalendar();
+		//ChineseLunisolarCalendar ChineseCalendar = new ChineseLunisolarCalendar();
 		bool isShowChineseDate = false;
 
 		//XmlCtl xmlCfg = null;
 		DetailWin detailWin = null;
 		XmlModelServer xmlCfgServer = null;
 		ConfigCtl cfgCtl = new ConfigCtl();
+
+		object saveLock = new object();
 
 		public MainWindow() {
 			InitializeComponent();
@@ -83,6 +85,7 @@ namespace desktopDate.view {
 			FestivalServer.ins.init();
 			ClockServer.ins.init();
 			TimerServer.ins.init();
+			AutoSaveServer.ins.init();
 
 			updateDate();
 
@@ -254,7 +257,7 @@ namespace desktopDate.view {
 			//}
 			
 			//农历
-			lblChineseDate.Content = GetChineseDateTime(date, out int mounth, out int day);
+			lblChineseDate.Content = ChineseDateServer.ins.GetChineseDateTime(date, out int mounth, out int day);
 
 			//农历节日
 			string chineseFestival = FestivalServer.ins.getChineseFestival(date.Year, mounth, day);
@@ -271,54 +274,6 @@ namespace desktopDate.view {
 			//if (FestivalServer.ins.mapChineseFestival.ContainsKey(lastDayChinese)) {
 			//	lblFestival.Content = FestivalServer.ins.mapChineseFestival[lastDayChinese];
 			//}
-		}
-
-		string[] months = { "正", "二", "三", "四", "五", "六", "七", "八", "九", "十", "十一", "十二" };
-		///<summary>返回农历月</summary>
-		public string GetLunisolarMonth(int month) {
-			if (month < 13 && month > 0) {
-				return months[month - 1];
-			}
-
-			return "零";
-		}
-
-		string[] days = { "一", "二", "三", "四", "五", "六", "七", "八", "九", "十" };
-		string[] days1 = { "初", "十", "廿", "三" };
-		///<summary>返回农历日</summary>
-		public string GetLunisolarDay(int day) {
-			if (day > 0 && day < 32) {
-				if (day != 20 && day != 30) {
-					return string.Concat(days1[(day - 1) / 10], days[(day - 1) % 10]);
-				} else {
-					return string.Concat(days[(day - 1) / 10], days1[1]);
-				}
-			}
-
-			return "零零";
-		}
-
-		///<summary>根据公历获取农历日期</summary>
-		public string GetChineseDateTime(DateTime datetime, out int month, out int day) {
-			int year = ChineseCalendar.GetYear(datetime);
-			month = ChineseCalendar.GetMonth(datetime);
-			day = ChineseCalendar.GetDayOfMonth(datetime);
-			//获取闰月， 0 则表示没有闰月
-			int leapMonth = ChineseCalendar.GetLeapMonth(year);
-
-			bool isleap = false;
-
-			if (leapMonth > 0) {
-				if (leapMonth == month) {
-					//闰月
-					isleap = true;
-					month--;
-				} else if (month > leapMonth) {
-					month--;
-				}
-			}
-
-			return (isleap ? "闰" : "") + GetLunisolarMonth(month) + "月" + GetLunisolarDay(day);
 		}
 
 		public uint stringToKeyCode(string strKey) {
@@ -402,6 +357,7 @@ namespace desktopDate.view {
 
 		private void Window_Closed(object sender, EventArgs e) {
 			try {
+				AutoSaveServer.ins.clear();
 				NowTimeServer.ins.clear();
 				TimerServer.ins.clear();
 				ClockServer.ins.clear();
@@ -411,11 +367,21 @@ namespace desktopDate.view {
 					detailWin = null;
 				}
 
-				cfgCtl.save();
-				xmlCfgServer.save();
+				saveConfig();
 				//xmlCfg.save();
 			} catch(Exception ex) {
 				Debug.WriteLine(ex.ToString());
+			}
+		}
+
+		public void saveConfig() {
+			lock(saveLock) {
+				try {
+					cfgCtl.save();
+					xmlCfgServer.save();
+				} catch(Exception) {
+
+				}
 			}
 		}
 	}

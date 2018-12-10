@@ -1,0 +1,37 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:local="clr-namespace:desktopDate.view.util">
+	<Style x:Key="BaseMusicSlider" TargetType="{x:Type local:MusicSlider}">
+		<Setter Property="BorderThickness" Value="0"/>
+		<Setter Property="Background" Value="Transparent"/>
+		<Setter Property="Cursor" Value="Hand"/>
+
+		<Setter Property="Template">
+			<Setter.Value>
+				<ControlTemplate TargetType="{x:Type local:MusicSlider}">
+					<Border
+						Background="{Binding Background,RelativeSource={RelativeSource TemplatedParent}}"
+						Name="bd">
+						<Grid Height="20">
+							<Polygon Points="0,13 0,20 100,20 100,0">
+								<Polygon.Fill>
+									<LinearGradientBrush >
+										<GradientStop Color="#FFD4D4D4" Offset="0"/>
+										<GradientStop Color="#FFD19E9E" Offset="0.564"/>
+										<GradientStop Color="#FFB61717" Offset="1"/>
+									</LinearGradientBrush>
+								</Polygon.Fill>
+							</Polygon>
+							<Border Margin="0" Background="#f1a1ee" CornerRadius="3" Height="20" Width="5" HorizontalAlignment="Left" VerticalAlignment="Center" Name="bdRound"/>
+						</Grid>
+					</Border>
+					<ControlTemplate.Triggers>
+					</ControlTemplate.Triggers>
+				</ControlTemplate>
+			</Setter.Value>
+		</Setter>
+	</Style>
+
+	<Style BasedOn="{StaticResource BaseMusicSlider}" TargetType="{x:Type local:MusicSlider}">
+	</Style>
+</ResourceDictionary>
