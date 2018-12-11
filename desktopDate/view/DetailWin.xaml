@@ -10,6 +10,15 @@
 	<Grid>
 		<Border BorderThickness="2" BorderBrush="#414141"/>
 
+		<Border Padding="2" HorizontalAlignment="Right" VerticalAlignment="Top" Width="18" Height="18" Background="Transparent" Cursor="Hand" Name="btnFix" MouseUp="btnFix_MouseUp">
+			<Grid>
+				<Polygon HorizontalAlignment="Right" VerticalAlignment="Top" Width="14" Height="14" Points="0,0 14,0 14,14" Fill="#888888" Visibility="Collapsed" Name="plyFixBack"/>
+				<Polyline HorizontalAlignment="Right" VerticalAlignment="Top" Width="14" Height="14" Points="0,0 14,14" Stroke="#b5b5b5" StrokeThickness="1" Name="plyFix1"/>
+				<Polyline HorizontalAlignment="Right" VerticalAlignment="Top" Width="8" Height="8" Points="0,0 8,8" Stroke="#b5b5b5" StrokeThickness="1" Name="plyFix2"/>
+				<Polyline HorizontalAlignment="Right" VerticalAlignment="Top" Width="3" Height="3" Points="0,0 3,3" Stroke="#b5b5b5" StrokeThickness="1" Name="plyFix3"/>
+			</Grid>
+		</Border>
+
 		<Grid Margin="8">
 			<Grid.RowDefinitions>
 				<RowDefinition Height="28"/>
@@ -17,7 +26,7 @@
 				<RowDefinition Height="165*"/>
 			</Grid.RowDefinitions>
 
-			<Border BorderThickness="1" BorderBrush="#b5b5b5" CornerRadius="8">
+			<Border Margin="10,0,10,0" BorderThickness="1" BorderBrush="#b5b5b5" CornerRadius="8">
 				<Grid>
 					<Grid.ColumnDefinitions>
 						<ColumnDefinition Width="*"/>

@@ -31,6 +31,8 @@ namespace desktopDate.view {
 
 		Brush selectButtonBackground = null;
 
+		bool isFix = false;
+
 		public DetailWin() {
 			InitializeComponent();
 
@@ -87,6 +89,10 @@ namespace desktopDate.view {
 
 		private void Window_Deactivated(object sender, EventArgs e) {
 			onClose?.Invoke();
+
+			if(isFix) {
+				return;
+			}
 
 			if(ClockServer.ins.isPlay()) {
 				return;
@@ -162,6 +168,16 @@ namespace desktopDate.view {
 
 		private void btnAbout_Click(object sender, RoutedEventArgs e) {
 			(new AboutWin()).Show();
+		}
+
+		Brush actFixColor = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#fff"));
+		Brush defFixColor = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#b5b5b5"));
+		private void btnFix_MouseUp(object sender, MouseButtonEventArgs e) {
+			isFix = !isFix;
+			plyFixBack.Visibility = isFix ? Visibility.Visible : Visibility.Collapsed;
+			plyFix1.Stroke = isFix ? actFixColor : defFixColor;
+			plyFix2.Stroke = plyFix1.Stroke;
+			plyFix3.Stroke = plyFix1.Stroke;
 		}
 	}
 
