@@ -14,6 +14,8 @@ namespace desktopDate.control {
 		public string path = "";
 		public IntPtr handle = IntPtr.Zero;
 
+		public float volume = 0.5f;		//0.0-1.0
+
 		FMOD.System fmodSystem = null;
 		FMOD.Sound backgroundMusic = null;
 		FMOD.Channel channelMusic = null;
@@ -71,7 +73,7 @@ namespace desktopDate.control {
 				// 播放音乐 提供Sound 通道组我们没有 开始时是否暂停 是 out 当前声音的播放通道
 				fmodSystem.playSound(backgroundMusic, null, false, out channelMusic);
 				// 暂停来设置音量 0.0 - 1.0
-				channelMusic.setVolume(0.5f);
+				channelMusic.setVolume(volume);
 				// 恢复播放
 				//channelMusic.setPaused(false);
 				// 按下ESC退出播放

@@ -19,16 +19,16 @@
 			<Image Width="100" Margin="50,20,0,0" VerticalAlignment="Top" HorizontalAlignment="Left" Source="/desktopDate;component/resource/image/icon.png"/>
 
 			<StackPanel Grid.Column="2">
-				<Label HorizontalAlignment="Left" Foreground="#fff" FontSize="30" Content="Desktop Date"/>
-				<Label HorizontalAlignment="Left" Foreground="#fff" Content="version：1.0.0"/>
-				<Label HorizontalAlignment="Left" Foreground="#fff" Content="copyright(C) 2018 xxxxst"/>
-				<StackPanel Orientation="Horizontal">
-					<Label HorizontalAlignment="Left" Foreground="#fff" Content="source code - "/>
-					<Label HorizontalAlignment="Left" Foreground="#7c92ff" Cursor="Hand" Content=""/>
+				<Label HorizontalAlignment="Left" Padding="5,2" Foreground="#fff" FontSize="30" Content="Desktop Date"/>
+				<Label HorizontalAlignment="Left" Padding="5,2" Foreground="#fff" Content="version：1.0.0"/>
+				<Label HorizontalAlignment="Left" Padding="5,2" Foreground="#fff" Content="copyright(C) 2018 xxxxst"/>
+				<StackPanel Orientation="Horizontal" Margin="0,8,0,0">
+					<Label HorizontalAlignment="Left" Padding="5,2" Foreground="#ffffff" Content="source code -"/>
+					<Label HorizontalAlignment="Left" Padding="5,2" Foreground="#f1a1ee" Cursor="Hand" Content="https://github.com/xxxxst/desktopDate" MouseUp="lblUrlJump_MouseUp"/>
 				</StackPanel>
 				<StackPanel Orientation="Horizontal">
-					<Label HorizontalAlignment="Left" Foreground="#fff" Content="fmod -"/>
-					<Label HorizontalAlignment="Left" Foreground="#f1a1ee" Cursor="Hand" Content="https://www.fmod.com/" Name="lblFmodUrl" MouseUp="lblUrlJump_MouseUp"/>
+					<Label HorizontalAlignment="Left" Padding="5,2" Foreground="#ffffff" Content="           fmod -"/>
+					<Label HorizontalAlignment="Left" Padding="5,2" Foreground="#f1a1ee" Cursor="Hand" Content="https://www.fmod.com/" MouseUp="lblUrlJump_MouseUp"/>
 				</StackPanel>
 				<Label HorizontalAlignment="Left" Foreground="#fff" Padding="5,2" Margin="0,20,0,0" Content="设置时间："/>
 				<Label HorizontalAlignment="Left" Foreground="#fff" Padding="5,2" Content="点击时/分/秒，滑动鼠标设置。鼠标右键取消，鼠标左键确定"/>

@@ -151,7 +151,7 @@ namespace csharpHelp.services {
 
 		private object getData(Func<string, string, string> getDataFun, string path, Type type, string defValue = "") {
 			string strValue = getDataFun(path, defValue);
-			return Convert.ChangeType(strValue, type);
+			return convertData(strValue, type);
 		}
 
 		private void setListAttr(object data, MemberInfo mi, string path) {
@@ -186,7 +186,7 @@ namespace csharpHelp.services {
 			_xml.each(rootPath, (idx2, xml) => {
 				var strValue = xml.attr(subPath);
 				//Debug.WriteLine("111:" + xml.name() + "," + xml.attr(attrName));
-				object obj = Convert.ChangeType(strValue, argType);
+				object obj = convertData(strValue, argType);
 				//Debug.WriteLine("aa:" + obj.GetType());
 
 				mtAdd.Invoke(lst, new object[] { obj });
@@ -214,7 +214,7 @@ namespace csharpHelp.services {
 			
 			_xml.each(path, (idx2, xml) => {
 				var strValue = xml.value();
-				object obj = Convert.ChangeType(strValue, argType);
+				object obj = convertData(strValue, argType);
 
 				mtAdd.Invoke(lst, new object[] { obj });
 			});
@@ -321,14 +321,31 @@ namespace csharpHelp.services {
 			return argType;
 		}
 
-		private void setData(object data, MemberInfo pi, Func<string, string, string> getDataFun, string path) {
-			object val = getMemberValue(pi, data);
+		private void setData(object data, MemberInfo mi, Func<string, string, string> getDataFun, string path) {
+			Type type = getMemberType(mi);
+			object val = getMemberValue(mi, data);
+			if(val == null) {
+				try {
+					val = Activator.CreateInstance(type);
+				} catch(Exception) { }
+			}
 
 			var strValue = getDataFun(path, val.ToString());
 
-			string strType = val.GetType().ToString();
-			object rst = Convert.ChangeType(strValue, val.GetType());
-			setMemberValue(pi, data, rst);
+			//string strType = val.GetType().ToString();
+			object rst = convertData(strValue, type, val);
+			setMemberValue(mi, data, rst);
+		}
+
+		private object convertData(string data, Type type, object defValue = null) {
+			if(type.IsEnum) {
+				try {
+					return Enum.Parse(type, data);
+				} catch(Exception) { }
+				return defValue;
+			}
+
+			return Convert.ChangeType(data, type);
 		}
 
 		public void saveToXml() {

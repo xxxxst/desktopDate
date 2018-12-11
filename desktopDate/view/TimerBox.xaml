@@ -7,17 +7,17 @@
              xmlns:util="clr-namespace:desktopDate.view.util"
 	         xmlns:supUI="clr-namespace:csharpHelp.ui"
              mc:Ignorable="d" 
-             d:DesignHeight="330" d:DesignWidth="260">
+             d:DesignHeight="330" d:DesignWidth="244">
 	<Grid>
 		<Grid.RowDefinitions>
-			<RowDefinition Height="50"/>
+			<RowDefinition Height="40"/>
 			<RowDefinition Height="4"/>
 			<RowDefinition Height="*"/>
 		</Grid.RowDefinitions>
 
 		<Grid>
 			<StackPanel HorizontalAlignment="Left" Orientation="Horizontal">
-				<Grid Margin="4,12">
+				<Grid Margin="4,8">
 					<Image HorizontalAlignment="Left" Source="/desktopDate;component/resource/image/timer.png" Name="imgIcon"/>
 					<util:ImageRotate HorizontalAlignment="Left" Visibility="Collapsed" Source="/desktopDate;component/resource/image/timer.png" x:Name="imgIconRotate"/>
 				</Grid>
@@ -138,6 +138,19 @@
 					
 					<supUI:TextBoxFile IsShowFullPath="False" IsDisableInput="True" Content="铃声" x:Name="txtMusic" TextChanged="txtMusic_TextChanged"/>
 					<supUI:MiniButton Grid.Column="1" Margin="4,0" ImagePadding="6" Background="Transparent" Height="26" VerticalAlignment="Bottom" Radius="5" Source="/desktopDate;component/resource/image/delete.png" x:Name="btnClearMusic" Click="btnClearMusic_Click"/>
+				</Grid>
+
+				<Grid Margin="0,8,0,0" Height="30">
+					<Grid.ColumnDefinitions>
+						<ColumnDefinition Width="Auto"/>
+						<ColumnDefinition Width="4"/>
+						<ColumnDefinition Width="Auto"/>
+						<ColumnDefinition Width="*"/>
+					</Grid.ColumnDefinitions>
+					<Label Foreground="#fff" VerticalContentAlignment="Bottom" Content="音量" />
+
+					<util:MusicSlider Grid.Column="2" Width="150" HorizontalAlignment="Left" Minimum="0" Maximum="100" x:Name="sldVolume" ValueChanged="sldVolume_ValueChanged"/>
+					<Label Grid.Column="3" Foreground="#fff" VerticalContentAlignment="Bottom" Content="{Binding Value,ElementName=sldVolume}" ContentStringFormat="{}{0:0}"/>
 				</Grid>
 			</StackPanel>
 		</Grid>

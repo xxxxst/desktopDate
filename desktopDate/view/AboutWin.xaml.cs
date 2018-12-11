@@ -49,8 +49,7 @@ namespace desktopDate.view {
 			if(lbl == null) {
 				return;
 			}
-
-
+			
 			Process.Start(lbl.Content.ToString());
 		}
 	}

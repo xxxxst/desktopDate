@@ -144,6 +144,7 @@ namespace desktopDate.services {
 			//isPlay = true;
 			try {
 				musicPlayer.path = path;
+				musicPlayer.volume = (float)MainModel.ins.cfgMd.timerVolume / 100;
 				musicPlayer.play();
 
 				int waitTime = MainModel.ins.cfgMd.alarmTimeSecond;

@@ -8,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
+using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
@@ -52,12 +53,13 @@ namespace desktopDate.view {
 			InitializeComponent();
 
 			ins = this;
-			MainModel.ins.mainWIn = this;
-
+			MainModel.ins.mainWin = this;
+			
 			//xmlCfg = new XmlCtl();
 			//xmlCfg.load("config.xml");
+			string configPath = "config.xml";
 			MainModel.ins.cfgMd = new ConfigModel();
-			xmlCfgServer = new XmlModelServer(MainModel.ins.cfgMd, "config.xml");
+			xmlCfgServer = new XmlModelServer(MainModel.ins.cfgMd, configPath);
 			try{
 				xmlCfgServer.loadFromXml();
 				//ConfigModel md = MainModel.ins.cfgMd;
@@ -69,6 +71,11 @@ namespace desktopDate.view {
 				Debug.WriteLine(ex.ToString());
 			}
 			cfgCtl.load();
+			if(!File.Exists(configPath)) {
+				saveConfig();
+			}
+
+			EventServer.ins.onConfigLoaded();
 
 			//ignoreMouseEvent();
 			setPos();
@@ -86,6 +93,8 @@ namespace desktopDate.view {
 			ClockServer.ins.init();
 			TimerServer.ins.init();
 			AutoSaveServer.ins.init();
+			
+			initDetailWin();
 
 			updateDate();
 
@@ -217,13 +226,94 @@ namespace desktopDate.view {
 		}
 
 		private void setPos() {
+			ConfigModel md = MainModel.ins.cfgMd;
+			if(md.dx <= 0 || md.dx >= 99999) {
+				md.dx = 0;
+			}
+			if(md.dy <= 0 || md.dy >= 99999) {
+				md.dy = 0;
+			}
+			if(md.width <= 0 || md.width >= 99999) {
+				md.width = (int)Width;
+			}
+			if(md.height <= 0 || md.height >= 99999) {
+				md.height = (int)Height;
+			}
+
+			Width = md.width;
+			Height = md.height;
+
 			int w = 0;
 			int h = Screen.PrimaryScreen.Bounds.Height;
 			for (int i = 0; i < Screen.AllScreens.Length; ++i) {
 				w += Screen.AllScreens[i].Bounds.Width;
 			}
-			Left = w - Width;
-			Top = h - Height;
+			switch(md.winAlign) {
+				case WinAlign.LeftTop: {
+					Left = md.dx;
+					Top = md.dy;
+					break;
+				}
+				case WinAlign.RightTop: {
+					Left = w - Width - md.dx;
+					Top = md.dy;
+					break;
+				}
+				case WinAlign.LeftBottom: {
+					Left = md.dx;
+					Top = h - Height - md.dy;
+					break;
+				}
+				case WinAlign.RightBottom:
+				default: {
+					Left = w - Width - md.dx;
+					Top = h - Height - md.dy;
+					break;
+				}
+			}
+			//Left = w - Width;
+			//Top = h - Height;
+
+			if(Height < 40) {
+				rowLeft1.Height = new GridLength(0);
+				rowRight2.Height = new GridLength(0);
+			}
+		}
+
+		private void initDetailWin() {
+			detailWin = new DetailWin();
+			MainModel.ins.detailWin = detailWin;
+
+			detailWin.onClose = () => {
+				//detailWin = null;
+			};
+
+			ConfigModel md = MainModel.ins.cfgMd;
+			switch(md.winAlign) {
+				case WinAlign.LeftTop: {
+					detailWin.Left = Left;
+					detailWin.Top = Top + Height+ 10;
+					break;
+				}
+				case WinAlign.RightTop: {
+					detailWin.Left = Left + Width - detailWin.Width;
+					detailWin.Top = Top + Height + 10;
+					break;
+				}
+				case WinAlign.LeftBottom: {
+					detailWin.Left = Left;
+					detailWin.Top = Top - detailWin.Height - 10;
+					break;
+				}
+				case WinAlign.RightBottom:
+				default: {
+					detailWin.Left = Left + Width - detailWin.Width;
+					detailWin.Top = Top - detailWin.Height - 10;
+					break;
+				}
+			}
+			//detailWin.Left = Left + Width - detailWin.Width;
+			//detailWin.Top = Top - detailWin.Height - 10;
 		}
 
 		private void timerProc(object sender, EventArgs e) {
@@ -329,21 +419,22 @@ namespace desktopDate.view {
 			}
 
 			if(e.ChangedButton == MouseButton.Left) {
-				if(detailWin == null) {
-					detailWin = new DetailWin();
-					MainModel.ins.detailWin = detailWin;
+				//if(detailWin == null) {
+				//	detailWin = new DetailWin();
+				//	MainModel.ins.detailWin = detailWin;
 
-					detailWin.onClose = () => {
-						//detailWin = null;
-					};
+				//	detailWin.onClose = () => {
+				//		//detailWin = null;
+				//	};
 
-					detailWin.Left = Left + Width - detailWin.Width;
-					detailWin.Top = Top - detailWin.Height - 10;
+				//	detailWin.Left = Left + Width - detailWin.Width;
+				//	detailWin.Top = Top - detailWin.Height - 10;
 
-					detailWin.Show();
-				} else {
-					detailWin.Show();
-				}
+				//	detailWin.Show();
+				//} else {
+				//	detailWin.Show();
+				//}
+				detailWin.Show();
 			}
 		}
 
@@ -357,6 +448,8 @@ namespace desktopDate.view {
 
 		private void Window_Closed(object sender, EventArgs e) {
 			try {
+				bool hasChanged = AutoSaveServer.ins.hasChanged;
+
 				AutoSaveServer.ins.clear();
 				NowTimeServer.ins.clear();
 				TimerServer.ins.clear();
@@ -367,7 +460,9 @@ namespace desktopDate.view {
 					detailWin = null;
 				}
 
-				saveConfig();
+				if(hasChanged) {
+					saveConfig();
+				}
 				//xmlCfg.save();
 			} catch(Exception ex) {
 				Debug.WriteLine(ex.ToString());

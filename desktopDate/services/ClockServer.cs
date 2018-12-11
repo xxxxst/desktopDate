@@ -14,6 +14,8 @@ namespace desktopDate.services {
 	public class ClockServer {
 		public static ClockServer ins = new ClockServer();
 
+		public ClockModel playClockModel = null;
+
 		public Action onPlayMusicStart = null;
 		public Action onPlayMusicFinished = null;
 
@@ -80,6 +82,7 @@ namespace desktopDate.services {
 				}
 
 				if(date.Second <= 1) {
+					playClockModel = lst[i];
 					playMusic();
 					break;
 				}
@@ -99,6 +102,7 @@ namespace desktopDate.services {
 			//isPlay = true;
 			try {
 				musicPlayer.path = path;
+				musicPlayer.volume = (float)MainModel.ins.cfgMd.clockVolume / 100;
 				musicPlayer.play();
 				onPlayMusicStart?.Invoke();
 

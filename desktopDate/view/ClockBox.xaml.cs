@@ -45,6 +45,7 @@ namespace desktopDate.view {
 
 			grdSetting.Visibility = Visibility.Collapsed;
 			txtMusic.Text = MainModel.ins.cfgMd.timerMusicPath;
+			sldVolume.Value = getVolume();
 
 			arrClock = MainModel.ins.cfgMd.lstClock;
 			for(int i = 0; i < arrClock.Count; ++i) {
@@ -74,14 +75,26 @@ namespace desktopDate.view {
 				Dispatcher.Invoke(updateTimerStatus);
 			};
 
+			EventServer.ins.detailWinHideEvent += () => {
+				showSettingBox(false);
+			};
+
 			updateTimerStatus();
 
 			NowTimeServer.ins.timer.Tick += new EventHandler(timerProc);
 		}
 
+		private int getVolume() {
+			int rst = MainModel.ins.cfgMd.clockVolume;
+			rst = Math.Min(rst, 100);
+			rst = Math.Max(rst, 0);
+
+			return rst;
+		}
+
 		private void timerProc(object sender, EventArgs e) {
 			DateTime date = DateTime.Now;
-			lblNowTime.Content = date.ToString("HH;mm:ss");
+			lblNowTime.Content = date.ToString("HH:mm:ss");
 		}
 
 		private void updateTimerStatus() {
@@ -92,6 +105,22 @@ namespace desktopDate.view {
 
 			imgIcon.Visibility = !ins.isPlay() ? Visibility.Visible : Visibility.Collapsed;
 			imgIconRotate.Visibility = ins.isPlay() ? Visibility.Visible : Visibility.Collapsed;
+
+			String info = "";
+			ClockModel md = ClockServer.ins.playClockModel;
+			if(md != null) {
+				info = md.desc;
+			}
+			if(ins.isPlay() && info != "") {
+				lblNowTime.Padding = new Thickness(0, 28, 0, 0);
+				lblNowTime.FontSize = 10;
+				lblAlarmInfo.Visibility = Visibility.Visible;
+				lblAlarmInfo.Content = info;
+			} else {
+				lblNowTime.Padding = new Thickness(0, 0, 0, 0);
+				lblNowTime.FontSize = 20;
+				lblAlarmInfo.Visibility = Visibility.Collapsed;
+			}
 		}
 
 		private void btnStop_Click(object sender, RoutedEventArgs e) {
@@ -118,10 +147,14 @@ namespace desktopDate.view {
 			AutoSaveServer.ins.hasChanged = true;
 		}
 
-		private void btnSetting_Click(object sender, RoutedEventArgs e) {
-			btnSetting.IsSelect = !btnSetting.IsSelect;
+		private void showSettingBox(bool isShow) {
+			btnSetting.IsSelect = isShow;
 			grdTimer.Visibility = btnSetting.IsSelect ? Visibility.Collapsed : Visibility.Visible;
 			grdSetting.Visibility = !btnSetting.IsSelect ? Visibility.Collapsed : Visibility.Visible;
+		}
+
+		private void btnSetting_Click(object sender, RoutedEventArgs e) {
+			showSettingBox(!btnSetting.IsSelect);
 		}
 
 		private void btnDelete_Click(object sender, RoutedEventArgs e) {
@@ -137,6 +170,10 @@ namespace desktopDate.view {
 		}
 
 		private void txtMusic_TextChanged(object sender, TextChangedEventArgs e) {
+			if(txtMusic.Text == MainModel.ins.cfgMd.clockMusicPath) {
+				return;
+			}
+
 			MainModel.ins.cfgMd.clockMusicPath = txtMusic.Text;
 			//Debug.WriteLine(txtMusic.Text);
 
@@ -209,6 +246,7 @@ namespace desktopDate.view {
 			const int gap = gapL + gapR;
 
 			int val = 0;
+			//val = (oldValue + (int)((x - gapL) / (w - gap) * (maxVal + 1))) % (maxVal + 1);
 			val = (int)((x - gapL) / (w - gap) * (maxVal + 1));
 			val = Math.Max(val, 0);
 			val = Math.Min(val, maxVal);
@@ -250,6 +288,14 @@ namespace desktopDate.view {
 			txtMusic.Text = "";
 		}
 
+		private void sldVolume_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e) {
+			int val = (int)Math.Round(sldVolume.Value);
+			if(val == MainModel.ins.cfgMd.clockVolume) {
+				return;
+			}
+			MainModel.ins.cfgMd.clockVolume = val;
+			AutoSaveServer.ins.hasChanged = true;
+		}
 	}
 
 	public class ClockVM : INotifyPropertyChanged {

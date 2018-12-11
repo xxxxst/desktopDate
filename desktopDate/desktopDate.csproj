@@ -169,6 +169,7 @@
     <Compile Include="services\AutoSaveServer.cs" />
     <Compile Include="services\ChineseDateServer.cs" />
     <Compile Include="services\ClockServer.cs" />
+    <Compile Include="services\EventServer.cs" />
     <Compile Include="services\NowTimeServer.cs" />
     <Compile Include="services\TimerServer.cs" />
     <Compile Include="sdk\csharpHelp\services\XmlModelServer.cs" />

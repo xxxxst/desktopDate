@@ -11,7 +11,7 @@ namespace desktopDate.model {
 		public static MainModel ins = new MainModel();
 
 		public DetailWin detailWin = null;
-		public MainWindow mainWIn = null;
+		public MainWindow mainWin = null;
 
 		public ConfigModel cfgMd = null;
 
@@ -21,11 +21,20 @@ namespace desktopDate.model {
 	[XmlRoot("desktopDate")]
 	public class ConfigModel {
 		[XmlAttr("dataVersion")] public string dataVersion = "1.0.0";
+		
+		[XmlAttr("win.dx")] public int dx = 0;
+		[XmlAttr("win.dy")] public int dy = 0;
+		[XmlAttr("win.width")] public int width = 180;
+		[XmlAttr("win.height")] public int height = 74;
+		[XmlAttr("win.align")] public WinAlign winAlign = WinAlign.RightBottom;
 
 		[XmlValue("config.alarmTimeSecond")] public int alarmTimeSecond = 30;
 
 		[XmlAttr("clockBox.music")] public string clockMusicPath = "";
 		[XmlAttr("timerBox.music")] public string timerMusicPath = "";
+
+		[XmlAttr("clockBox.volume")] public int clockVolume = 50;
+		[XmlAttr("timerBox.volume")] public int timerVolume = 50;
 
 		[XmlListChild("clockBox.clock")] public List<ClockModel> lstClock = null;
 		[XmlListChild("timerBox.timer")] public List<TimerModel> lstTimer = null;
@@ -54,4 +63,5 @@ namespace desktopDate.model {
 
 	enum EditTimeType { Hour, Minute, Second }
 
+	public enum WinAlign { LeftTop, RightTop, RightBottom, LeftBottom };
 }

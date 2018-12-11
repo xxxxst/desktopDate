@@ -7,21 +7,24 @@
              xmlns:util="clr-namespace:desktopDate.view.util"
 	         xmlns:supUI="clr-namespace:csharpHelp.ui"
              mc:Ignorable="d" 
-             d:DesignHeight="330" d:DesignWidth="260">
+             d:DesignHeight="330" d:DesignWidth="244">
     <Grid>
 		<Grid.RowDefinitions>
-			<RowDefinition Height="50"/>
+			<RowDefinition Height="40"/>
 			<RowDefinition Height="4"/>
 			<RowDefinition Height="*"/>
 		</Grid.RowDefinitions>
 
 		<Grid>
 			<StackPanel HorizontalAlignment="Left" Orientation="Horizontal">
-				<Grid Margin="4,12">
+				<Grid Margin="4,8">
 					<Image HorizontalAlignment="Left" Source="/desktopDate;component/resource/image/clock.png" Name="imgIcon"/>
 					<util:ImageRotate HorizontalAlignment="Left" Visibility="Collapsed" Source="/desktopDate;component/resource/image/clock.png" x:Name="imgIconRotate"/>
 				</Grid>
-				<Label Padding="0" Foreground="#fff" VerticalContentAlignment="Center" HorizontalAlignment="Left" FontSize="20" Content="00:00:00" Name="lblNowTime"/>
+				<Grid>
+					<Label Padding="0,0,0,10" Foreground="#f1a1ee" VerticalContentAlignment="Center" HorizontalAlignment="Left" FontSize="20" Content="info" Visibility="Visible" Name="lblAlarmInfo"/>
+					<Label Padding="0,28,0,0" Foreground="#ffffff" VerticalContentAlignment="Center" HorizontalAlignment="Left" FontSize="10" Content="00:00:00" Name="lblNowTime"/>
+				</Grid>
 			</StackPanel>
 			<StackPanel HorizontalAlignment="Right" Orientation="Horizontal">
 				<supUI:MiniButton ImagePadding="6" Background="Transparent" Height="30" VerticalAlignment="Center" Radius="5" Source="/desktopDate;component/resource/image/stop.png" x:Name="btnStop" Click="btnStop_Click"/>
@@ -96,7 +99,7 @@
 									</TextBox>
 
 									<!--is enable-->
-									<util:RoundCheckBox Grid.Column="2" Margin="4,0,0,0" Tag="{Binding .}" IsChecked="{Binding IsEnable, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" x:Name="chekEnable" Checked="chekEnable_Checked" Unchecked="chekEnable_Unchecked"/>
+									<util:RoundCheckBox Grid.Column="2" Margin="4,0,0,0" Tag="{Binding .}" IsChecked="{Binding IsEnable, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Visibility="{Binding IsNotEditVisibility}" x:Name="chekEnable" Checked="chekEnable_Checked" Unchecked="chekEnable_Unchecked"/>
 
 									<!--delete button-->
 									<StackPanel Grid.Column="3" Margin="2,0,0,0" HorizontalAlignment="Right" Orientation="Horizontal" Visibility="{Binding IsNotEditVisibility}">
@@ -142,10 +145,21 @@
 					<supUI:TextBoxFile Height="30" IsShowFullPath="False" IsDisableInput="True" Content="铃声" x:Name="txtMusic" TextChanged="txtMusic_TextChanged"/>
 					<supUI:MiniButton Grid.Column="1" Margin="4,0" ImagePadding="6" Background="Transparent" Height="26" VerticalAlignment="Bottom" Radius="5" Source="/desktopDate;component/resource/image/delete.png" x:Name="btnClearMusic" Click="btnClearMusic_Click"/>
 				</Grid>
+
+				<Grid Margin="0,8,0,0" Height="30">
+					<Grid.ColumnDefinitions>
+						<ColumnDefinition Width="Auto"/>
+						<ColumnDefinition Width="4"/>
+						<ColumnDefinition Width="Auto"/>
+						<ColumnDefinition Width="*"/>
+					</Grid.ColumnDefinitions>
+					<Label Foreground="#fff" VerticalContentAlignment="Bottom" Content="音量" />
+
+					<util:MusicSlider Grid.Column="2" Width="150" HorizontalAlignment="Left" Minimum="0" Maximum="100" x:Name="sldVolume" ValueChanged="sldVolume_ValueChanged"/>
+					<Label Grid.Column="3" Foreground="#fff" VerticalContentAlignment="Bottom" Content="{Binding Value, ElementName=sldVolume}" ContentStringFormat="{}{0:0}"/>
+				</Grid>
 			</StackPanel>
 		</Grid>
-
-		<!--<util:MusicSlider/>-->
 
 		<Grid.Style>
 			<Style TargetType="Grid">

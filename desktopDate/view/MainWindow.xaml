@@ -10,24 +10,24 @@
 		<Grid Background="#000" Opacity="0.5" Name="grdMain"/>
 		<Grid>
 			<Grid.ColumnDefinitions>
-				<ColumnDefinition Width="*"/>
-				<ColumnDefinition Width="80"/>
+				<ColumnDefinition Width="*" Name="colLeft"/>
+				<ColumnDefinition Width="1000*" MaxWidth="80" Name="colRight"/>
 			</Grid.ColumnDefinitions>
 			
 			<Grid Grid.Column="0">
 				<Grid.RowDefinitions>
-					<RowDefinition Height="*"/>
-					<RowDefinition Height="*"/>
-					<RowDefinition Height="*"/>
+					<RowDefinition Height="*" Name="rowLeft1"/>
+					<RowDefinition Height="*" Name="rowLeft2"/>
+					<RowDefinition Height="*" Name="rowLeft3"/>
 				</Grid.RowDefinitions>
 				<Label Grid.Row="1" Padding="0" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Foreground="#fff" Content="圣诞节" Name="lblFestival"/>
 				<Label Grid.Row="2" Padding="0" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Foreground="#fff" Content="润十二月初三" Name="lblChineseDate"/>
 			</Grid>
 			<Grid Grid.Column="1">
 				<Grid.RowDefinitions>
-					<RowDefinition Height="*"/>
-					<RowDefinition Height="*"/>
-					<RowDefinition Height="*"/>
+					<RowDefinition Height="*" Name="rowRight1"/>
+					<RowDefinition Height="*" Name="rowRight2"/>
+					<RowDefinition Height="*" Name="rowRight3"/>
 				</Grid.RowDefinitions>
 
 				<Label Grid.Row="0" Padding="0" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Foreground="#fff" Content="00:00" Name="lblTime"/>

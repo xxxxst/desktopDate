@@ -45,6 +45,7 @@ namespace desktopDate.view {
 
 			grdSetting.Visibility = Visibility.Collapsed;
 			txtMusic.Text = MainModel.ins.cfgMd.timerMusicPath;
+			sldVolume.Value = getVolume();
 
 			arrTimer = MainModel.ins.cfgMd.lstTimer;
 			for(int i = 0; i < arrTimer.Count; ++i) {
@@ -87,8 +88,20 @@ namespace desktopDate.view {
 				});
 			};
 
+			EventServer.ins.detailWinHideEvent += () => {
+				showSettingBox(false);
+			};
+
 			updateTimerStatus();
 			updateNowTime();
+		}
+
+		private int getVolume() {
+			int rst = MainModel.ins.cfgMd.timerVolume;
+			rst = Math.Min(rst, 100);
+			rst = Math.Max(rst, 0);
+
+			return rst;
 		}
 
 		private void updateNowTime() {
@@ -147,10 +160,14 @@ namespace desktopDate.view {
 			AutoSaveServer.ins.hasChanged = true;
 		}
 
-		private void btnSetting_Click(object sender, RoutedEventArgs e) {
-			btnSetting.IsSelect = !btnSetting.IsSelect;
+		private void showSettingBox(bool isShow) {
+			btnSetting.IsSelect = isShow;
 			grdTimer.Visibility = btnSetting.IsSelect ? Visibility.Collapsed : Visibility.Visible;
 			grdSetting.Visibility = !btnSetting.IsSelect ? Visibility.Collapsed : Visibility.Visible;
+		}
+
+		private void btnSetting_Click(object sender, RoutedEventArgs e) {
+			showSettingBox(!btnSetting.IsSelect);
 		}
 
 		private void btnStart_Click(object sender, RoutedEventArgs e) {
@@ -183,6 +200,10 @@ namespace desktopDate.view {
 		}
 
 		private void txtMusic_TextChanged(object sender, TextChangedEventArgs e) {
+			if(txtMusic.Text == MainModel.ins.cfgMd.timerMusicPath) {
+				return;
+			}
+
 			MainModel.ins.cfgMd.timerMusicPath = txtMusic.Text;
 			//Debug.WriteLine(txtMusic.Text);
 
@@ -279,6 +300,15 @@ namespace desktopDate.view {
 
 		private void btnClearMusic_Click(object sender, RoutedEventArgs e) {
 			txtMusic.Text = "";
+		}
+
+		private void sldVolume_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e) {
+			int val = (int)Math.Round(sldVolume.Value);
+			if(val == MainModel.ins.cfgMd.timerVolume) {
+				return;
+			}
+			MainModel.ins.cfgMd.timerVolume = val;
+			AutoSaveServer.ins.hasChanged = true;
 		}
 	}
 

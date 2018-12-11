@@ -102,6 +102,7 @@ namespace desktopDate.view {
 
 			//Close();
 			Hide();
+			EventServer.ins.onDetailWinHide();
 		}
 
 		public void show(DetailWinViewBox type) {
