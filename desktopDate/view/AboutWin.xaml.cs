@@ -37,11 +37,15 @@ namespace desktopDate.view {
 		}
 
 		private void Window_MouseUp(object sender, MouseButtonEventArgs e) {
-			Close();
+			try {
+				Close();
+			} catch (Exception) { }
 		}
 
 		private void Window_Deactivated(object sender, EventArgs e) {
-			Close();
+			try {
+				Close();
+			} catch (Exception) { }
 		}
 
 		private void lblUrlJump_MouseUp(object sender, MouseButtonEventArgs e) {
