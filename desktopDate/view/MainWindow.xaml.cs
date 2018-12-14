@@ -57,7 +57,7 @@ namespace desktopDate.view {
 			
 			//xmlCfg = new XmlCtl();
 			//xmlCfg.load("config.xml");
-			string configPath = "config.xml";
+			string configPath = SysConst.configPath();
 			MainModel.ins.cfgMd = new ConfigModel();
 			xmlCfgServer = new XmlModelServer(MainModel.ins.cfgMd, configPath);
 			try{

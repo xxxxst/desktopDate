@@ -173,6 +173,7 @@
     <Compile Include="services\NowTimeServer.cs" />
     <Compile Include="services\TimerServer.cs" />
     <Compile Include="sdk\csharpHelp\services\XmlModelServer.cs" />
+    <Compile Include="util\SysConst.cs" />
     <Compile Include="util\TimeFormat.cs" />
     <Compile Include="view\AboutWin.xaml.cs">
       <DependentUpon>AboutWin.xaml</DependentUpon>
