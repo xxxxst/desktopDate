@@ -112,11 +112,11 @@ namespace desktopDate.view {
 			TimerServer ins = TimerServer.ins;
 			btnStartNow.Visibility = ins.isStart() && ins.isPause ? Visibility.Visible : Visibility.Collapsed;
 			btnPause.Visibility = ins.isStart() && !ins.isPause ? Visibility.Visible : Visibility.Collapsed;
-			btnStop.Visibility = ins.isStart() || ins.isPlay() ? Visibility.Visible : Visibility.Collapsed;
-			btnSetting.Visibility = !ins.isStart() && !ins.isPlay() ? Visibility.Visible : Visibility.Collapsed;
+			btnStop.Visibility = ins.isStart() || ins.isAlarm() ? Visibility.Visible : Visibility.Collapsed;
+			btnSetting.Visibility = !ins.isStart() && !ins.isAlarm() ? Visibility.Visible : Visibility.Collapsed;
 
-			imgIcon.Visibility = !ins.isPlay() ? Visibility.Visible : Visibility.Collapsed;
-			imgIconRotate.Visibility = ins.isPlay() ? Visibility.Visible : Visibility.Collapsed;
+			imgIcon.Visibility = !ins.isAlarm() ? Visibility.Visible : Visibility.Collapsed;
+			imgIconRotate.Visibility = ins.isAlarm() ? Visibility.Visible : Visibility.Collapsed;
 		}
 
 		private void btnStartNow_Click(object sender, RoutedEventArgs e) {
@@ -172,16 +172,17 @@ namespace desktopDate.view {
 
 		private void btnStart_Click(object sender, RoutedEventArgs e) {
 			TimerVM vm = (sender as MiniButton).Tag as TimerVM;
-			nowSecond = TimeFormat.getTotalSecond(vm.md.hour, vm.md.minute, vm.md.second);
 			//nowSecond = vm.md.totalSecond;
+
+			TimerServer.ins.restart(vm.md);
+
+			nowSecond = TimeFormat.getTotalSecond(vm.md.hour, vm.md.minute, vm.md.second);
 
 			if(selectVM != null) {
 				selectVM.IsSelect = false;
 			}
 			selectVM = vm;
 			selectVM.IsSelect = true;
-
-			TimerServer.ins.restart(vm.md);
 
 			updateNowTime();
 			updateTimerStatus();

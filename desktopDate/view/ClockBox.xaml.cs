@@ -44,7 +44,7 @@ namespace desktopDate.view {
 			}
 
 			grdSetting.Visibility = Visibility.Collapsed;
-			txtMusic.Text = MainModel.ins.cfgMd.timerMusicPath;
+			txtMusic.Text = MainModel.ins.cfgMd.clockMusicPath;
 			sldVolume.Value = getVolume();
 
 			arrClock = MainModel.ins.cfgMd.lstClock;
@@ -100,18 +100,18 @@ namespace desktopDate.view {
 		private void updateTimerStatus() {
 			ClockServer ins = ClockServer.ins;
 
-			btnStop.Visibility = ins.isPlay() ? Visibility.Visible : Visibility.Collapsed;
-			btnSetting.Visibility = !ins.isPlay() ? Visibility.Visible : Visibility.Collapsed;
+			btnStop.Visibility = ins.isAlarm() ? Visibility.Visible : Visibility.Collapsed;
+			btnSetting.Visibility = !ins.isAlarm() ? Visibility.Visible : Visibility.Collapsed;
 
-			imgIcon.Visibility = !ins.isPlay() ? Visibility.Visible : Visibility.Collapsed;
-			imgIconRotate.Visibility = ins.isPlay() ? Visibility.Visible : Visibility.Collapsed;
+			imgIcon.Visibility = !ins.isAlarm() ? Visibility.Visible : Visibility.Collapsed;
+			imgIconRotate.Visibility = ins.isAlarm() ? Visibility.Visible : Visibility.Collapsed;
 
 			String info = "";
 			ClockModel md = ClockServer.ins.playClockModel;
 			if(md != null) {
 				info = md.desc;
 			}
-			if(ins.isPlay() && info != "") {
+			if(ins.isAlarm() && info != "") {
 				lblNowTime.Padding = new Thickness(0, 28, 0, 0);
 				lblNowTime.FontSize = 10;
 				lblAlarmInfo.Visibility = Visibility.Visible;

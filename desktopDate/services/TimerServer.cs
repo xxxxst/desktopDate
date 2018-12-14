@@ -34,6 +34,7 @@ namespace desktopDate.services {
 		private long parseTime = 0;
 		private Timer timer = null;
 		private SetTimeout waitAlarm = null;
+		private bool _isAlarm = false;
 
 		public void init() {
 			musicPlayer = new MusicPlayer();
@@ -93,8 +94,12 @@ namespace desktopDate.services {
 					timer = null;
 				}
 
-				bool isPlay = musicPlayer.isPlay();
-				musicPlayer.stop();
+				bool isPlay = musicPlayer.isPlay() || _isAlarm;
+				try {
+					musicPlayer.stop();
+				} catch(Exception) { }
+
+				_isAlarm = false;
 
 				if(isPlay) {
 					onPlayMusicFinished?.Invoke();
@@ -131,22 +136,26 @@ namespace desktopDate.services {
 			}
 		}
 
-		public bool isPlay() {
-			return musicPlayer.isPlay();
+		public bool isAlarm() {
+			return musicPlayer.isPlay() || _isAlarm;
 		}
 		
 		private void playMusic() {
+			_isAlarm = true;
+
 			string path = MainModel.ins.cfgMd.timerMusicPath;
-			if(!File.Exists(path)) {
-				return;
+			if(File.Exists(path)) {
+				try {
+					musicPlayer.path = path;
+					musicPlayer.volume = (float)MainModel.ins.cfgMd.timerVolume / 100;
+					musicPlayer.play();
+				} catch(Exception ex) {
+					Debug.WriteLine(ex.ToString());
+				}
 			}
 
 			//isPlay = true;
 			try {
-				musicPlayer.path = path;
-				musicPlayer.volume = (float)MainModel.ins.cfgMd.timerVolume / 100;
-				musicPlayer.play();
-
 				int waitTime = MainModel.ins.cfgMd.alarmTimeSecond;
 				if(waitTime <= 0 || waitTime > 3600) {
 					waitTime = 30;

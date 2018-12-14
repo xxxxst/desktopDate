@@ -24,6 +24,7 @@ namespace desktopDate.services {
 		private Timer timer = null;
 		private SetTimeout waitAlarm = null;
 		private long lastStopTime = 0;
+		private bool _isAlarm = false;
 
 		public void init() {
 			musicPlayer = new MusicPlayer();
@@ -38,8 +39,12 @@ namespace desktopDate.services {
 
 		public void stop() {
 			try {
-				bool isPlay = musicPlayer.isPlay();
-				musicPlayer.stop();
+				bool isPlay = musicPlayer.isPlay() || _isAlarm;
+				try {
+					musicPlayer.stop();
+				} catch(Exception) { }
+
+				_isAlarm = false;
 
 				if(isPlay) {
 					lastStopTime = DateTime.Now.ToFileTimeUtc();
@@ -58,7 +63,7 @@ namespace desktopDate.services {
 		private void timerProc(object sender, ElapsedEventArgs e) {
 			DateTime date = DateTime.Now;
 
-			if(isPlay()) {
+			if(isAlarm()) {
 				return;
 			}
 
@@ -89,21 +94,26 @@ namespace desktopDate.services {
 			}
 		}
 
-		public bool isPlay() {
-			return musicPlayer.isPlay();
+		public bool isAlarm() {
+			return musicPlayer.isPlay() || _isAlarm;
 		}
 
 		private void playMusic() {
+			_isAlarm = true;
+
 			string path = MainModel.ins.cfgMd.clockMusicPath;
-			if(!File.Exists(path)) {
-				return;
+			if(File.Exists(path)) {
+				try {
+					musicPlayer.path = path;
+					musicPlayer.volume = (float)MainModel.ins.cfgMd.clockVolume / 100;
+					musicPlayer.play();
+				} catch(Exception ex) {
+					Debug.WriteLine(ex.ToString());
+				}
 			}
 
 			//isPlay = true;
 			try {
-				musicPlayer.path = path;
-				musicPlayer.volume = (float)MainModel.ins.cfgMd.clockVolume / 100;
-				musicPlayer.play();
 				onPlayMusicStart?.Invoke();
 
 				int waitTime = MainModel.ins.cfgMd.alarmTimeSecond;

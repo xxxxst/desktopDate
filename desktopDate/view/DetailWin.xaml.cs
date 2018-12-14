@@ -94,11 +94,11 @@ namespace desktopDate.view {
 				return;
 			}
 
-			if(ClockServer.ins.isPlay()) {
+			if(ClockServer.ins.isAlarm()) {
 				return;
 			}
 
-			if(TimerServer.ins.isPlay()) {
+			if(TimerServer.ins.isAlarm()) {
 				return;
 			}
 
