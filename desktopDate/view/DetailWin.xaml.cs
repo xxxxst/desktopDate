@@ -38,35 +38,63 @@ namespace desktopDate.view {
 
 			selectButtonBackground = btnFestival.Background;
 
-			arrFestival = FestivalServer.ins.getListFestival();
-			for(int i = 0; i < arrFestival.Count; ++i) {
-				FestivalModel md = arrFestival[i];
+			//arrFestival = FestivalServer.ins.getListFestival();
+			//for(int i = 0; i < arrFestival.Count; ++i) {
+			//	FestivalModel md = arrFestival[i];
+
+			//	FestivalVM vm = new FestivalVM();
+			//	vm.Name = md.name;
+			//	vm.Time = md.showTime;
+			//	int day = md.dayOfRange;
+			//	//if(day < 0) {
+			//	//	//vm.DayOfRange = "结束";
+			//	//	vm.DayOfRange = "距离1年" + (0 - day) + "天";
+			//	//	vm.dayOfRangeType = DayOfRangeType.Finish;
+			//	//} else 
+			//	if(day == 0) {
+			//		vm.DayOfRange = "今天";
+			//		vm.dayOfRangeType = DayOfRangeType.Now;
+			//	} else {
+			//		if(md.isFinished) {
+			//			//vm.DayOfRange = "距离1年" + (day - 365) + "天";
+			//			vm.dayOfRangeType = DayOfRangeType.Finish;
+			//		} else {
+			//			vm.dayOfRangeType = DayOfRangeType.Wait;
+			//		}
+
+			//		//if(day > 365) {
+			//		//	vm.DayOfRange = "距离" + (day/365) + "年" + (day % 365) + "天";
+			//		//} else {
+			//		//	vm.DayOfRange = "距离" + day + "天";
+			//		//}
+			//		vm.DayOfRange = "距离" + day + "天";
+			//	}
+			//	arrFestivalVM.Add(vm);
+			//}
+
+			//lstFestival.ItemsSource = arrFestivalVM;
+		}
+
+		public void updateDate(List<FestivalInfo> arrFestival) {
+			arrFestivalVM = new List<FestivalVM>();
+			
+			for (int i = 0; i < arrFestival.Count; ++i) {
+				FestivalInfo md = arrFestival[i];
 
 				FestivalVM vm = new FestivalVM();
-				vm.Name = md.name;
+				vm.Name = md.desc;
 				vm.Time = md.showTime;
 				int day = md.dayOfRange;
-				//if(day < 0) {
-				//	//vm.DayOfRange = "结束";
-				//	vm.DayOfRange = "距离1年" + (0 - day) + "天";
-				//	vm.dayOfRangeType = DayOfRangeType.Finish;
-				//} else 
-				if(day == 0) {
+				if (day == 0) {
 					vm.DayOfRange = "今天";
 					vm.dayOfRangeType = DayOfRangeType.Now;
 				} else {
-					if(md.isFinished) {
-						//vm.DayOfRange = "距离1年" + (day - 365) + "天";
+					if (md.isFinished) {
 						vm.dayOfRangeType = DayOfRangeType.Finish;
 					} else {
 						vm.dayOfRangeType = DayOfRangeType.Wait;
 					}
-
-					//if(day > 365) {
-					//	vm.DayOfRange = "距离" + (day/365) + "年" + (day % 365) + "天";
-					//} else {
-					//	vm.DayOfRange = "距离" + day + "天";
-					//}
+					
 					vm.DayOfRange = "距离" + day + "天";
 				}
 				arrFestivalVM.Add(vm);

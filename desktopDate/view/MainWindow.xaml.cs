@@ -49,6 +49,9 @@ namespace desktopDate.view {
 
 		object saveLock = new object();
 
+		List<FestivalInfo> arrFestival = new List<FestivalInfo>();
+		Dictionary<string, FestivalInfo> mapTimeToFestival = new Dictionary<string, FestivalInfo>();
+
 		public MainWindow() {
 			InitializeComponent();
 
@@ -284,6 +287,8 @@ namespace desktopDate.view {
 			detailWin = new DetailWin();
 			MainModel.ins.detailWin = detailWin;
 
+			refreshDate();
+
 			detailWin.onClose = () => {
 				//detailWin = null;
 			};
@@ -334,35 +339,50 @@ namespace desktopDate.view {
 			}
 			lastDay = temp;
 
-			//节日
-			string festival = FestivalServer.ins.getFestival(date);
-			lblFestival.Content = festival;
+			refreshDate();
+		}
 
-			//节日
-			//if (mapFestival.ContainsKey(lastDay)) {
-			//	lblFestival.Content = mapFestival[lastDay];
-			//} else {
-			//	//lblFestival.Content = lblWeek.Content;
-			//	lblFestival.Content = "";
-			//}
-			
+		private void refreshDate() {
+			DateTime date = DateTime.Now;
+
+			arrFestival = FestivalServer.ins.getNextYearFestival();
+			mapTimeToFestival = new Dictionary<string, FestivalInfo>();
+			for (int i = 0; i < arrFestival.Count; ++i) {
+				mapTimeToFestival[arrFestival[i].showTime] = arrFestival[i];
+			}
+
+			string strNowTime = date.ToString("MM/dd");
+			string festivalDesc = "";
+			if (mapTimeToFestival.ContainsKey(strNowTime)) {
+				festivalDesc = mapTimeToFestival[strNowTime].desc;
+			}
+			if (festivalDesc == "") {
+				var md = arrFestival.First();
+				festivalDesc = md.desc + "(" + md.dayOfRange + "天)";
+			}
+			lblFestival.Content = festivalDesc;
+
 			//农历
 			lblChineseDate.Content = ChineseDateServer.ins.GetChineseDateTime(date, out int mounth, out int day);
+			
+			detailWin?.updateDate(arrFestival);
 
-			//农历节日
-			string chineseFestival = FestivalServer.ins.getChineseFestival(date.Year, mounth, day);
-			if(chineseFestival != "") {
-				lblFestival.Content = chineseFestival;
-			}
+			////节日
+			//string festival = FestivalServer.ins.getFestival(date);
+			//lblFestival.Content = festival;
 
-			if((string)lblFestival.Content == "") {
-				FestivalModel md = FestivalServer.ins.getNextFestival();
-				lblFestival.Content = md.name + "(" + md.dayOfRange + "天)";
-			}
+			////农历
+			//lblChineseDate.Content = ChineseDateServer.ins.GetChineseDateTime(date, out int mounth, out int day);
 
-			//string lastDayChinese = mounth.ToString().PadLeft(2, '0') + "/" + day.ToString().PadLeft(2, '0');
-			//if (FestivalServer.ins.mapChineseFestival.ContainsKey(lastDayChinese)) {
-			//	lblFestival.Content = FestivalServer.ins.mapChineseFestival[lastDayChinese];
+			////农历节日
+			//string chineseFestival = FestivalServer.ins.getChineseFestival(date.Year, mounth, day);
+			//if(chineseFestival != "") {
+			//	lblFestival.Content = chineseFestival;
+			//}
+
+			//if((string)lblFestival.Content == "") {
+			//	FestivalModel md = FestivalServer.ins.getNextFestival();
+			//	lblFestival.Content = md.name + "(" + md.dayOfRange + "天)";
 			//}
 		}
 
