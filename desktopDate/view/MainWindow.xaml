@@ -20,8 +20,8 @@
 					<RowDefinition Height="*" Name="rowLeft2"/>
 					<RowDefinition Height="*" Name="rowLeft3"/>
 				</Grid.RowDefinitions>
-				<Label Grid.Row="1" Padding="0" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Foreground="#fff" Content="圣诞节" Name="lblFestival"/>
-				<Label Grid.Row="2" Padding="0" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Foreground="#fff" Content="润十二月初三" Name="lblChineseDate"/>
+				<Label Grid.Row="1" Padding="0" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Foreground="#fff" Content="除夕" Name="lblFestival"/>
+				<Label Grid.Row="2" Padding="0" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Foreground="#fff" Content="腊月三十" Name="lblChineseDate"/>
 			</Grid>
 			<Grid Grid.Column="1">
 				<Grid.RowDefinitions>
@@ -31,8 +31,8 @@
 				</Grid.RowDefinitions>
 
 				<Label Grid.Row="0" Padding="0" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Foreground="#fff" Content="00:00" Name="lblTime"/>
-				<Label Grid.Row="1" Padding="0" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Foreground="#fff" Content="星期日" Name="lblWeek"/>
-				<Label Grid.Row="2" Padding="0" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Foreground="#fff" Content="2018/01/01" Name="lblDate"/>
+				<Label Grid.Row="1" Padding="0" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Foreground="#fff" Content="星期四" Name="lblWeek"/>
+				<Label Grid.Row="2" Padding="0" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Foreground="#fff" Content="2018/02/15" Name="lblDate"/>
 				<!--<Label Grid.Row="1" Padding="0" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Foreground="#fff" Content="春节" Visibility="Collapsed" Name="lblFestival"/>-->
 				<!--<Label Grid.Row="2" Padding="0" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Foreground="#fff" Content="十二月初三" Visibility="Collapsed" Name="lblChineseDate"/>-->
 			</Grid>

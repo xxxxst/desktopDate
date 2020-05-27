@@ -42,6 +42,8 @@ namespace desktopDate.view {
 		//ChineseLunisolarCalendar ChineseCalendar = new ChineseLunisolarCalendar();
 		bool isShowChineseDate = false;
 
+		string lastDay = "";
+
 		//XmlCtl xmlCfg = null;
 		DetailWin detailWin = null;
 		XmlModelServer xmlCfgServer = null;
@@ -287,7 +289,7 @@ namespace desktopDate.view {
 			detailWin = new DetailWin();
 			MainModel.ins.detailWin = detailWin;
 
-			refreshDate();
+			//refreshDate();
 
 			detailWin.onClose = () => {
 				//detailWin = null;
@@ -325,7 +327,6 @@ namespace desktopDate.view {
 			updateDate();
 		}
 
-		string lastDay = "";
 		private void updateDate() {
 			DateTime date = DateTime.Now;
 			lblTime.Content = date.ToString("HH;mm:ss");
@@ -338,7 +339,7 @@ namespace desktopDate.view {
 				return;
 			}
 			lastDay = temp;
-
+			
 			refreshDate();
 		}
 

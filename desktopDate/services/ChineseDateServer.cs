@@ -11,7 +11,7 @@ namespace desktopDate.services {
 
 		ChineseLunisolarCalendar ChineseCalendar = new ChineseLunisolarCalendar();
 
-		string[] months = { "正", "二", "三", "四", "五", "六", "七", "八", "九", "十", "十一", "十二" };
+		string[] months = { "正", "二", "三", "四", "五", "六", "七", "八", "九", "十", "十一", "腊" };
 		///<summary>返回农历月</summary>
 		public string GetLunisolarMonth(int month) {
 			if(month < 13 && month > 0) {
@@ -60,7 +60,19 @@ namespace desktopDate.services {
 		}
 
 		public DateTime toDateTime(int year, int month, int day, int hour = 0, int minute = 0, int second = 0, int millisecond = 0) {
-			return ChineseCalendar.ToDateTime(year, month, day, hour, minute, second, millisecond);
+			// 闰月
+			// 闰月的节日在润月
+			int leapMonth = ChineseCalendar.GetLeapMonth(year);
+			if(leapMonth > 0) {
+				if(month > leapMonth - 1) {
+					++month;
+				}
+			}
+			DateTime date = ChineseCalendar.ToDateTime(year, month, day, hour, minute, second, millisecond);
+			if(year == 2020 && month == 13 && day == 5) {
+				Console.WriteLine("aaa: " + date.ToString("yyyy/MM/dd"));
+			}
+			return date;
 		}
 
 	}
